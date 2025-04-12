@@ -1,110 +1,152 @@
 "use client"
 
-import type React from "react"
+import React from "react"
 
-import { useComponentStore } from "@/hooks/use-component-store"
-import { useVariantStore } from "@/hooks/use-variant-store"
-import { Navigation } from "./landing-components/navigation"
-import { Hero } from "./landing-components/hero"
-import { Features } from "./landing-components/features"
-import { Testimonials } from "./landing-components/testimonials"
-import { Pricing } from "./landing-components/pricing"
-import { CTA } from "./landing-components/cta"
-import { Footer } from "./landing-components/footer"
-import { useEffect, useState, useRef } from "react"
-import { ComponentWrapper } from "./component-wrapper"
+import { useEffect, useRef } from "react"
+import { motion, AnimatePresence } from "framer-motion"
+import type { Section, Theme } from "@/lib/types"
+import { SectionRenderer } from "@/components/section-renderer"
 
-const componentMap = {
-  nav: Navigation,
-  hero: Hero,
-  features: Features,
-  testimonials: Testimonials,
-  pricing: Pricing,
-  cta: CTA,
-  footer: Footer,
+interface CanvasProps {
+  sections: Section[]
+  theme: Theme
+  onCycleVariant: (sectionId: string, direction: "next" | "prev") => void
+  onMoveSection: (sectionId: string, direction: "up" | "down") => void
+  onDeleteSection: (sectionId: string) => void
+  selectedSectionId: string | null
+  setSelectedSectionId: (id: string | null) => void
 }
 
-const componentNames = {
-  nav: "Navigation",
-  hero: "Hero",
-  features: "Features",
-  testimonials: "Testimonials",
-  pricing: "Pricing",
-  cta: "Call to Action",
-  footer: "Footer",
-}
+export function Canvas({
+  sections,
+  theme,
+  onCycleVariant,
+  onMoveSection,
+  onDeleteSection,
+  selectedSectionId,
+  setSelectedSectionId,
+}: CanvasProps) {
+  const canvasRef = useRef<HTMLDivElement>(null)
+  // Track if we're currently cycling variants to prevent animations
+  const [isCyclingVariant, setIsCyclingVariant] = React.useState(false)
 
-export function Canvas() {
-  const { components, selectComponent, lastAddedComponent, clearLastAdded } = useComponentStore()
-  const { getVariant } = useVariantStore()
-  const [isClient, setIsClient] = useState(false)
-  const componentRefs = useRef<(HTMLDivElement | null)[]>([])
-
-  // This ensures we only render after hydration to avoid hydration mismatch
   useEffect(() => {
-    setIsClient(true)
-  }, [])
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (!selectedSectionId) return
 
-  // Update the scroll behavior for newly added components
+      switch (e.key) {
+        case "ArrowRight":
+          setIsCyclingVariant(true)
+          onCycleVariant(selectedSectionId, "next")
+          // Reset after a short delay
+          setTimeout(() => setIsCyclingVariant(false), 50)
+          break
+        case "ArrowLeft":
+          setIsCyclingVariant(true)
+          onCycleVariant(selectedSectionId, "prev")
+          // Reset after a short delay
+          setTimeout(() => setIsCyclingVariant(false), 50)
+          break
+        case "ArrowUp":
+          onMoveSection(selectedSectionId, "up")
+          break
+        case "ArrowDown":
+          onMoveSection(selectedSectionId, "down")
+          break
+        case "Delete":
+        case "Backspace":
+          onDeleteSection(selectedSectionId)
+          setSelectedSectionId(null)
+          break
+      }
+    }
+
+    window.addEventListener("keydown", handleKeyDown)
+    return () => window.removeEventListener("keydown", handleKeyDown)
+  }, [selectedSectionId, onCycleVariant, onMoveSection, onDeleteSection, setSelectedSectionId])
+
+  // Clear selection when clicking outside of sections
   useEffect(() => {
-    if (lastAddedComponent !== null && componentRefs.current[lastAddedComponent]) {
-      // Scroll the component into view with a slight delay to ensure rendering is complete
-      setTimeout(() => {
-        componentRefs.current[lastAddedComponent]?.scrollIntoView({
-          behavior: "smooth",
-          block: "center",
-        })
-
-        // Add a highlight animation to the new component
-        const element = componentRefs.current[lastAddedComponent]
-        if (element) {
-          element.classList.add("animate-pulse-glow")
-          setTimeout(() => {
-            element.classList.remove("animate-pulse-glow")
-            clearLastAdded() // Clear the last added component after animation
-          }, 800) // Match the animation duration
-        }
-      }, 50) // Reduced delay for more immediate feedback
+    const handleClickOutside = (e: MouseEvent) => {
+      if (canvasRef.current && !canvasRef.current.contains(e.target as Node)) {
+        setSelectedSectionId(null)
+      }
     }
-  }, [lastAddedComponent, clearLastAdded])
 
-  // Handle click on the canvas background to deselect
-  const handleCanvasClick = (e: React.MouseEvent) => {
-    if (e.target === e.currentTarget) {
-      selectComponent(null)
-    }
+    document.addEventListener("mousedown", handleClickOutside)
+    return () => document.removeEventListener("mousedown", handleClickOutside)
+  }, [setSelectedSectionId])
+
+  const handleSectionClick = (sectionId: string) => {
+    setSelectedSectionId(sectionId)
   }
 
-  // Set up component refs
-  const setComponentRef = (index: number, el: HTMLDivElement | null) => {
-    componentRefs.current[index] = el
-  }
-
-  if (!isClient) {
-    return <div className="min-h-screen w-full"></div>
+  // Section animation variants
+  const sectionVariants = {
+    hidden: {
+      opacity: 0,
+      y: 20,
+      transition: {
+        type: "spring",
+        stiffness: 500,
+        damping: 30,
+      },
+    },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        type: "spring",
+        stiffness: 500,
+        damping: 30,
+      },
+    },
+    exit: {
+      opacity: 0,
+      y: -20,
+      transition: {
+        duration: 0.2,
+        ease: "easeIn",
+      },
+    },
   }
 
   return (
-    <div className="min-h-screen w-full theme-transition bg-theme-background" onClick={handleCanvasClick}>
-      {components.map((componentId, index) => {
-        const Component = componentMap[componentId as keyof typeof componentMap]
-        const variant = getVariant(componentId)
-
-        return (
-          <ComponentWrapper
-            key={`${componentId}-${index}`}
-            index={index}
-            componentId={componentId}
-            ref={(el) => setComponentRef(index, el)}
-            isNewlyAdded={lastAddedComponent === index}
+    <div
+      ref={canvasRef}
+      className="w-full min-h-screen flex flex-col relative" // Added relative positioning
+      style={
+        {
+          "--container-width": theme.containerWidth,
+          fontFamily: theme.fontFamily,
+          minHeight: "100vh", // Ensure minimum height
+          paddingBottom: "80px", // Add padding at the bottom to make space for the menu
+        } as React.CSSProperties
+      }
+    >
+      <AnimatePresence initial={false}>
+        {sections.map((section) => (
+          <motion.div
+            key={section.id}
+            onClick={() => handleSectionClick(section.id)}
+            className="relative group w-full"
+            variants={sectionVariants}
+            initial="hidden"
+            animate="visible"
+            exit="exit"
+            layout={!isCyclingVariant} // Disable layout animations during variant cycling
+            layoutId={isCyclingVariant ? undefined : section.id} // Remove layoutId during variant cycling
+            style={{ contain: "content" }} // Add CSS containment to prevent layout shifts
           >
-            <Component variant={variant} />
-          </ComponentWrapper>
-        )
-      })}
+            <SectionRenderer
+              section={section}
+              theme={theme}
+              isSelected={selectedSectionId === section.id}
+              isCyclingVariant={isCyclingVariant && selectedSectionId === section.id}
+            />
+          </motion.div>
+        ))}
+      </AnimatePresence>
     </div>
   )
 }
-
-// Export component names for use in the dynamic island
-export { componentNames }
