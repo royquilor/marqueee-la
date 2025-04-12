@@ -19,16 +19,17 @@ export async function generateSectionAction(
   prompt: string,
   theme: Theme,
 ): Promise<{ code: string; variant: number }> {
-  console.log("Server action: Generating section with Anthropic API...")
-  console.log("Section type:", sectionType)
-  console.log("Prompt:", prompt)
+  console.log("🔍 Server Action: generateSectionAction called with:", { sectionType, prompt })
+  console.log("🔍 Theme:", theme)
 
   // Check if we have the API key
   const apiKey = process.env.ANTHROPIC_API_KEY
   if (!apiKey) {
-    console.log("No API key found, using fallback")
+    console.log("⚠️ No API key found, using fallback")
     return generateMockSection(sectionType, prompt, theme)
   }
+
+  console.log("✅ API key found")
 
   // Create a specific prompt for hero sections with email subscription
   const isHeroWithEmailSubscription =
@@ -77,7 +78,9 @@ For a hero section with an email subscription form, include:
 `
 
   try {
-    console.log("Calling Anthropic API...")
+    console.log("🚀 Calling Anthropic API...")
+    console.log("🔍 System prompt:", systemPrompt)
+
     // Use the server-side API key
     const { text } = await generateText({
       model: anthropic("claude-3-haiku-20240307"),
@@ -96,16 +99,19 @@ Remember to:
       maxTokens: 2000, // Allow for longer responses
     })
 
-    console.log("AI response received, length:", text.length)
+    console.log("✅ AI response received, length:", text.length)
+    console.log("🔍 First 100 characters of response:", text.substring(0, 100))
+
     const cleanedCode = cleanGeneratedCode(text)
-    console.log("Cleaned code, length:", cleanedCode.length)
+    console.log("✅ Cleaned code, length:", cleanedCode.length)
+    console.log("🔍 First 100 characters of cleaned code:", cleanedCode.substring(0, 100))
 
     return {
       code: cleanedCode,
       variant: 1, // Default to variant 1 for new sections
     }
   } catch (error) {
-    console.error("Error generating section:", error)
+    console.error("❌ Error generating section:", error)
     // Fallback to mock response on error
     return generateMockSection(sectionType, prompt, theme)
   }
@@ -113,6 +119,8 @@ Remember to:
 
 // Server action to analyze a section
 export async function analyzeSectionAction(section: Section, currentCode: string): Promise<{ suggestions: string[] }> {
+  console.log("🔍 Server Action: analyzeSectionAction called with:", { section, currentCode })
+
   const systemPrompt = `
 You are an expert UI/UX designer and React developer specializing in Tailwind CSS.
 Analyze the provided React component and provide specific, actionable suggestions for improvement.
@@ -121,11 +129,15 @@ Provide 3-5 concise, specific suggestions.
 `
 
   try {
+    console.log("🚀 Calling Anthropic API for analysis...")
+
     const { text } = await generateText({
       model: anthropic("claude-3-haiku-20240307"),
       system: systemPrompt,
       prompt: `Analyze this ${section.type} section (variant ${section.variant}):\n\n${currentCode}`,
     })
+
+    console.log("✅ Analysis response received, length:", text.length)
 
     // Parse the suggestions from the response
     const suggestions = text
@@ -133,9 +145,11 @@ Provide 3-5 concise, specific suggestions.
       .filter(Boolean)
       .map((suggestion) => suggestion.trim())
 
+    console.log("🔍 Parsed suggestions:", suggestions)
+
     return { suggestions }
   } catch (error) {
-    console.error("Error analyzing section:", error)
+    console.error("❌ Error analyzing section:", error)
     // Fallback on error
     return {
       suggestions: [
@@ -151,6 +165,8 @@ Provide 3-5 concise, specific suggestions.
 
 // Server action to generate a theme
 export async function generateThemeAction(prompt: string): Promise<Partial<Theme>> {
+  console.log("🔍 Server Action: generateThemeAction called with prompt:", prompt)
+
   try {
     const systemPrompt = `
 You are an expert UI/UX designer specializing in creating beautiful color schemes and themes.
@@ -167,15 +183,22 @@ Generate a theme based on the user's prompt with the following properties:
 
 Return ONLY a JSON object with these properties, nothing else.
 `
+    console.log("🚀 Calling Anthropic API for theme generation...")
+
     const { text } = await generateText({
       model: anthropic("claude-3-haiku-20240307"),
       system: systemPrompt,
       prompt: `Create a theme based on this description: ${prompt}`,
     })
 
+    console.log("✅ Theme generation response received, length:", text.length)
+    console.log("🔍 Raw response:", text)
+
     // Parse the JSON response
     try {
       const themeData = JSON.parse(text.trim())
+      console.log("✅ Successfully parsed JSON:", themeData)
+
       return {
         colors: {
           primary: themeData.primary || "#3b82f6",
@@ -190,12 +213,13 @@ Return ONLY a JSON object with these properties, nothing else.
         bodyFont: themeData.bodyFont || "Inter, sans-serif",
       }
     } catch (e) {
-      console.error("Error parsing theme JSON:", e)
+      console.error("❌ Error parsing theme JSON:", e)
+      console.log("🔍 Text that failed to parse:", text)
       // Fallback to a simulated theme
       return simulateThemeGeneration(prompt)
     }
   } catch (error) {
-    console.error("Error generating theme:", error)
+    console.error("❌ Error generating theme:", error)
     return simulateThemeGeneration(prompt)
   }
 }
@@ -206,6 +230,8 @@ export async function generatePersonalizedThemeAction(options: {
   industry?: string
   productType?: string
 }): Promise<Partial<Theme>> {
+  console.log("🔍 Server Action: generatePersonalizedThemeAction called with options:", options)
+
   try {
     const systemPrompt = `
 You are an expert UI/UX designer specializing in creating beautiful color schemes and themes.
@@ -222,15 +248,22 @@ Generate a theme based on the user's specifications with the following propertie
 
 Return ONLY a JSON object with these properties, nothing else.
 `
+    console.log("🚀 Calling Anthropic API for personalized theme generation...")
+
     const { text } = await generateText({
       model: anthropic("claude-3-haiku-20240307"),
       system: systemPrompt,
       prompt: `Create a theme for a ${options.productType || "website"} in the ${options.industry || "general"} industry, targeting ${options.targetUser || "general users"}.`,
     })
 
+    console.log("✅ Personalized theme generation response received, length:", text.length)
+    console.log("🔍 Raw response:", text)
+
     // Parse the JSON response
     try {
       const themeData = JSON.parse(text.trim())
+      console.log("✅ Successfully parsed JSON:", themeData)
+
       return {
         colors: {
           primary: themeData.primary || "#3b82f6",
@@ -245,19 +278,20 @@ Return ONLY a JSON object with these properties, nothing else.
         bodyFont: themeData.bodyFont || "Inter, sans-serif",
       }
     } catch (e) {
-      console.error("Error parsing theme JSON:", e)
+      console.error("❌ Error parsing theme JSON:", e)
+      console.log("🔍 Text that failed to parse:", text)
       // Fallback to a simulated theme
       return simulatePersonalizedThemeGeneration(options)
     }
   } catch (error) {
-    console.error("Error generating personalized theme:", error)
+    console.error("❌ Error generating personalized theme:", error)
     return simulatePersonalizedThemeGeneration(options)
   }
 }
 
 // Helper function to clean up generated code
 function cleanGeneratedCode(code: string): string {
-  console.log("Cleaning generated code...")
+  console.log("🔍 Cleaning generated code...")
 
   // Remove markdown code blocks if present
   code = code.replace(/```(jsx|tsx|javascript|typescript)?([\s\S]*?)```/g, "$2").trim()
@@ -289,7 +323,7 @@ function cleanGeneratedCode(code: string): string {
 
 // Generate mock sections when API is not available
 function generateMockSection(sectionType: string, prompt: string, theme: Theme): { code: string; variant: number } {
-  console.log("Generating mock section as fallback")
+  console.log("🔍 Generating mock section as fallback for:", sectionType)
 
   // Create a simple mock section based on the section type
   let mockCode = ""
@@ -371,6 +405,7 @@ export function ${sectionType.charAt(0).toUpperCase() + sectionType.slice(1)}Sec
 `
   }
 
+  console.log("✅ Mock section generated successfully")
   return {
     code: mockCode,
     variant: 1,
@@ -379,6 +414,8 @@ export function ${sectionType.charAt(0).toUpperCase() + sectionType.slice(1)}Sec
 
 // Simulate theme generation for fallback
 function simulateThemeGeneration(prompt: string): Partial<Theme> {
+  console.log("🔍 Simulating theme generation for prompt:", prompt)
+
   // Generate a random color palette based on the prompt
   const hue = Math.floor(Math.random() * 360)
 
@@ -403,6 +440,8 @@ function simulatePersonalizedThemeGeneration(options: {
   industry?: string
   productType?: string
 }): Partial<Theme> {
+  console.log("🔍 Simulating personalized theme generation for options:", options)
+
   const { targetUser, industry, productType } = options
   let hue = 210 // Default blue
   let borderRadius = 8

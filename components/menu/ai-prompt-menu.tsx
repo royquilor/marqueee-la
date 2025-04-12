@@ -52,6 +52,7 @@ export function AiPromptMenu({
     message?: string
     apiKeyPresent?: boolean
   }>({})
+  const [creditUseAttempted, setCreditUseAttempted] = useState(false)
 
   const textareaRef = useRef<HTMLTextAreaElement>(null)
   const { toast } = useToast()
@@ -88,9 +89,11 @@ export function AiPromptMenu({
 
   // Function to test the API connection
   const handleTestApi = useCallback(async () => {
+    console.log("🔍 Testing API connection...")
     setTestingApi(true)
     try {
       const result = await testAnthropicApi()
+      console.log("📊 API test result:", result)
       setApiTestResult(result)
       setApiAvailable(result.success || false)
 
@@ -100,7 +103,7 @@ export function AiPromptMenu({
         variant: result.success ? "default" : "destructive",
       })
     } catch (error) {
-      console.error("Error testing API:", error)
+      console.error("❌ Error testing API:", error)
       setApiTestResult({
         success: false,
         message: "An unexpected error occurred while testing the API",
@@ -119,11 +122,20 @@ export function AiPromptMenu({
   }, [toast])
 
   const handleGenerateTheme = useCallback(async () => {
+    console.log("🎨 Starting theme generation process...")
     // Check if we have either a prompt or at least one dropdown selection
     const hasPrompt = prompt.trim().length > 0
     const hasSelection = tone || layout || style
 
+    console.log("📝 Prompt:", prompt)
+    console.log("🔍 Has prompt:", hasPrompt)
+    console.log("🔍 Has selection:", hasSelection)
+    console.log("🔍 Tone:", tone)
+    console.log("🔍 Layout:", layout)
+    console.log("🔍 Style:", style)
+
     if (!hasPrompt && !hasSelection) {
+      console.log("❌ No input provided")
       toast({
         title: "Input required",
         description: "Please enter a prompt or select at least one option",
@@ -133,6 +145,7 @@ export function AiPromptMenu({
     }
 
     if (!canGenerate) {
+      console.log("❌ No credits available")
       toast({
         title: "No credits left",
         description: "You've used all your AI credits",
@@ -141,12 +154,32 @@ export function AiPromptMenu({
       return
     }
 
+    console.log("🔍 Credits available:", credits)
+    console.log("🔍 Can generate:", canGenerate)
+
     setGeneratingTheme(true)
     setIsCreditBeingUsed(true)
+    setCreditUseAttempted(true)
 
-    // Use a credit before generating
-    const creditUsed = useAiCredit()
+    let creditUsed = false
+    try {
+      creditUsed = useAiCredit()
+    } catch (error) {
+      console.error("❌ Error using credit:", error)
+      toast({
+        title: "Failed to use credit",
+        description: "An unexpected error occurred while attempting to use an AI credit.",
+        variant: "destructive",
+      })
+      setGeneratingTheme(false)
+      setIsCreditBeingUsed(false)
+      setCreditUseAttempted(true)
+      return
+    }
+    setCreditUseAttempted(true)
+
     if (!creditUsed) {
+      console.log("❌ Failed to use credit")
       toast({
         title: "Failed to use credit",
         description: "Could not use an AI credit. Please try again.",
@@ -158,13 +191,16 @@ export function AiPromptMenu({
     }
 
     try {
+      console.log("🚀 Making API call to generate theme...")
       let newTheme: Partial<Theme>
 
       if (hasPrompt) {
         // If we have a prompt, use the text-based generation
+        console.log("🔍 Using text-based generation with prompt:", prompt)
         newTheme = await generateTheme(prompt)
       } else {
         // Otherwise use the personalized generation with dropdown selections
+        console.log("🔍 Using personalized generation with selections:", { tone, layout, style })
         newTheme = await generatePersonalizedTheme({
           targetUser: tone,
           industry: layout,
@@ -172,12 +208,14 @@ export function AiPromptMenu({
         })
       }
 
+      console.log("✅ Theme generated successfully:", newTheme)
       onUpdateTheme(newTheme)
       toast({
         title: "Theme generated",
         description: "Your new theme has been applied",
       })
     } catch (error) {
+      console.error("❌ Error generating theme:", error)
       toast({
         title: "Generation failed",
         description: "Failed to generate theme. Please try again.",
@@ -186,11 +224,17 @@ export function AiPromptMenu({
     } finally {
       setGeneratingTheme(false)
       setIsCreditBeingUsed(false)
+      console.log("🏁 Theme generation process completed")
     }
-  }, [prompt, tone, layout, style, canGenerate, onUpdateTheme, toast, useAiCredit])
+  }, [prompt, tone, layout, style, canGenerate, onUpdateTheme, toast, useAiCredit, credits])
 
   const handleGenerateSection = useCallback(async () => {
+    console.log("🏗️ Starting section generation process...")
+    console.log("📝 Prompt:", prompt)
+    console.log("🔍 Section type:", sectionType)
+
     if (!prompt.trim()) {
+      console.log("❌ No prompt provided")
       toast({
         title: "Input required",
         description: "Please enter a description for the section you want to generate",
@@ -200,6 +244,7 @@ export function AiPromptMenu({
     }
 
     if (!canGenerate) {
+      console.log("❌ No credits available")
       toast({
         title: "No credits left",
         description: "You've used all your AI credits",
@@ -209,6 +254,7 @@ export function AiPromptMenu({
     }
 
     if (!onAddGeneratedSection) {
+      console.log("❌ onAddGeneratedSection function not available")
       toast({
         title: "Feature not available",
         description: "Section generation is not available in this context",
@@ -217,12 +263,32 @@ export function AiPromptMenu({
       return
     }
 
+    console.log("🔍 Credits available:", credits)
+    console.log("🔍 Can generate:", canGenerate)
+
     setGeneratingSection(true)
     setIsCreditBeingUsed(true)
+    setCreditUseAttempted(true)
 
-    // Use a credit before generating
-    const creditUsed = useAiCredit()
+    let creditUsed = false
+    try {
+      creditUsed = useAiCredit()
+    } catch (error) {
+      console.error("❌ Error using credit:", error)
+      toast({
+        title: "Failed to use credit",
+        description: "An unexpected error occurred while attempting to use an AI credit.",
+        variant: "destructive",
+      })
+      setGeneratingSection(false)
+      setIsCreditBeingUsed(false)
+      setCreditUseAttempted(true)
+      return
+    }
+    setCreditUseAttempted(true)
+
     if (!creditUsed) {
+      console.log("❌ Failed to use credit")
       toast({
         title: "Failed to use credit",
         description: "Could not use an AI credit. Please try again.",
@@ -234,12 +300,14 @@ export function AiPromptMenu({
     }
 
     try {
-      console.log("Generating section with theme:", theme)
+      console.log("🚀 Making API call to generate section...")
+      console.log("🔍 Using theme:", theme)
       // Generate the section code using our server action with the current theme
       const result = await generateSection(sectionType, prompt, theme)
-      console.log("Generated section result:", result)
+      console.log("✅ Section generated successfully:", result)
 
       // Add the generated section to the canvas
+      console.log("➕ Adding generated section to canvas")
       onAddGeneratedSection(sectionType, result.code, result.variant)
 
       toast({
@@ -250,7 +318,7 @@ export function AiPromptMenu({
       // Clear the prompt after successful generation
       setPrompt("")
     } catch (error) {
-      console.error("Section generation error:", error)
+      console.error("❌ Error generating section:", error)
 
       toast({
         title: "Generation failed",
@@ -260,11 +328,16 @@ export function AiPromptMenu({
     } finally {
       setGeneratingSection(false)
       setIsCreditBeingUsed(false)
+      console.log("🏁 Section generation process completed")
     }
-  }, [prompt, sectionType, canGenerate, onAddGeneratedSection, toast, useAiCredit, theme])
+  }, [prompt, sectionType, canGenerate, onAddGeneratedSection, toast, useAiCredit, theme, credits])
 
   const handleAnalyzeSection = useCallback(async () => {
+    console.log("🔍 Starting section analysis process...")
+    console.log("🔍 Selected section:", selectedSection)
+
     if (!selectedSection) {
+      console.log("❌ No section selected")
       toast({
         title: "No section selected",
         description: "Please select a section to analyze",
@@ -274,6 +347,7 @@ export function AiPromptMenu({
     }
 
     if (!canGenerate) {
+      console.log("❌ No credits available")
       toast({
         title: "No credits left",
         description: "You've used all your AI credits",
@@ -282,12 +356,32 @@ export function AiPromptMenu({
       return
     }
 
+    console.log("🔍 Credits available:", credits)
+    console.log("🔍 Can generate:", canGenerate)
+
     setAnalyzingSection(true)
     setIsCreditBeingUsed(true)
+    setCreditUseAttempted(true)
 
-    // Use a credit before analyzing
-    const creditUsed = useAiCredit()
+    let creditUsed = false
+    try {
+      creditUsed = useAiCredit()
+    } catch (error) {
+      console.error("❌ Error using credit:", error)
+      toast({
+        title: "Failed to use credit",
+        description: "An unexpected error occurred while attempting to use an AI credit.",
+        variant: "destructive",
+      })
+      setAnalyzingSection(false)
+      setIsCreditBeingUsed(false)
+      setCreditUseAttempted(true)
+      return
+    }
+    setCreditUseAttempted(true)
+
     if (!creditUsed) {
+      console.log("❌ Failed to use credit")
       toast({
         title: "Failed to use credit",
         description: "Could not use an AI credit. Please try again.",
@@ -299,12 +393,14 @@ export function AiPromptMenu({
     }
 
     try {
+      console.log("🚀 Making API call to analyze section...")
       // For now, we'll use a placeholder for the current code
       // In a real implementation, you would need to get the actual code for the selected section
       const currentCode = `// Placeholder for ${selectedSection.type} section code (variant ${selectedSection.variant})`
 
       // Analyze the section using our server action
       const result = await analyzeSection(selectedSection, currentCode)
+      console.log("✅ Section analyzed successfully:", result)
 
       // Update the suggestions state
       setSuggestions(result.suggestions)
@@ -314,7 +410,7 @@ export function AiPromptMenu({
         description: `Analysis of ${selectedSection.type} section complete`,
       })
     } catch (error) {
-      console.error("Analysis error:", error)
+      console.error("❌ Analysis error:", error)
 
       toast({
         title: "Analysis failed",
@@ -324,18 +420,9 @@ export function AiPromptMenu({
     } finally {
       setAnalyzingSection(false)
       setIsCreditBeingUsed(false)
+      console.log("🏁 Section analysis process completed")
     }
-  }, [selectedSection, canGenerate, toast, useAiCredit])
-
-  // Move useAiCredit call outside of conditional blocks
-  const [creditUsed, setCreditUsed] = useState(false)
-
-  useEffect(() => {
-    if (isCreditBeingUsed) {
-      const used = useAiCredit()
-      setCreditUsed(used)
-    }
-  }, [isCreditBeingUsed, useAiCredit])
+  }, [selectedSection, canGenerate, toast, useAiCredit, credits])
 
   return (
     <div className="flex flex-col gap-2 w-full max-w-[320px]">
@@ -466,28 +553,7 @@ export function AiPromptMenu({
           </div>
 
           <Button
-            onClick={() => {
-              if (canGenerate && !generatingTheme && !isCreditBeingUsed) {
-                setIsCreditBeingUsed(true)
-                // const creditUsed = useAiCredit(); // No longer calling hook here
-                if (creditUsed) {
-                  handleGenerateTheme()
-                } else {
-                  toast({
-                    title: "Failed to use credit",
-                    description: "Could not use an AI credit. Please try again.",
-                    variant: "destructive",
-                  })
-                  setIsCreditBeingUsed(false)
-                }
-              } else if (!canGenerate) {
-                toast({
-                  title: "No credits left",
-                  description: "You've used all your AI credits",
-                  variant: "destructive",
-                })
-              }
-            }}
+            onClick={handleGenerateTheme}
             disabled={
               generatingTheme || (!prompt.trim() && !tone && !layout && !style) || !canGenerate || isCreditBeingUsed
             }
@@ -536,34 +602,7 @@ export function AiPromptMenu({
           />
 
           <Button
-            onClick={() => {
-              if (canGenerate && onAddGeneratedSection && !generatingSection && !isCreditBeingUsed) {
-                setIsCreditBeingUsed(true)
-                // const creditUsed = useAiCredit(); // No longer calling hook here
-                if (creditUsed) {
-                  handleGenerateSection()
-                } else {
-                  toast({
-                    title: "Failed to use credit",
-                    description: "Could not use an AI credit. Please try again.",
-                    variant: "destructive",
-                  })
-                  setIsCreditBeingUsed(false)
-                }
-              } else if (!canGenerate) {
-                toast({
-                  title: "No credits left",
-                  description: "You've used all your AI credits",
-                  variant: "destructive",
-                })
-              } else if (!onAddGeneratedSection) {
-                toast({
-                  title: "Feature not available",
-                  description: "Section generation is not available in this context",
-                  variant: "destructive",
-                })
-              }
-            }}
+            onClick={handleGenerateSection}
             disabled={
               generatingSection || !prompt.trim() || !canGenerate || !onAddGeneratedSection || isCreditBeingUsed
             }
@@ -591,34 +630,7 @@ export function AiPromptMenu({
           </div>
 
           <Button
-            onClick={() => {
-              if (canGenerate && selectedSection && !analyzingSection && !isCreditBeingUsed) {
-                setIsCreditBeingUsed(true)
-                // const creditUsed = useAiCredit(); // No longer calling hook here
-                if (creditUsed) {
-                  handleAnalyzeSection()
-                } else {
-                  toast({
-                    title: "Failed to use credit",
-                    description: "Could not use an AI credit. Please try again.",
-                    variant: "destructive",
-                  })
-                  setIsCreditBeingUsed(false)
-                }
-              } else if (!canGenerate) {
-                toast({
-                  title: "No credits left",
-                  description: "You've used all your AI credits",
-                  variant: "destructive",
-                })
-              } else if (!selectedSection) {
-                toast({
-                  title: "No section selected",
-                  description: "Please select a section to analyze",
-                  variant: "destructive",
-                })
-              }
-            }}
+            onClick={handleAnalyzeSection}
             disabled={analyzingSection || !selectedSection || !canGenerate || isCreditBeingUsed}
             size="sm"
             variant="outline"

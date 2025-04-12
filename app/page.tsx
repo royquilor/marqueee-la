@@ -22,7 +22,9 @@ export default function Home() {
 
   // Reset credits only once on initial mount
   useEffect(() => {
+    console.log("🔍 Initial credits value:", credits)
     if (credits === 0 && !hasResetCredits.current) {
+      console.log("💰 Resetting credits to 5")
       hasResetCredits.current = true
       setCredits(5)
     }
@@ -52,6 +54,9 @@ export default function Home() {
   }
 
   const addGeneratedSection = (sectionType: string, code: string, variant: number) => {
+    console.log("➕ Adding generated section:", { sectionType, variant })
+    console.log("📝 Code length:", code.length)
+
     // In a real implementation, you would need to save the generated code
     // and create a mechanism to render it in the SectionRenderer
     // For now, we'll just add a regular section
@@ -129,15 +134,21 @@ export default function Home() {
   }
 
   const useAiCredit = () => {
+    console.log("💰 Attempting to use AI credit. Current credits:", credits)
+
     if (credits > 0) {
+      console.log("💰 Credit available, reducing from", credits, "to", credits - 1)
       setCredits(credits - 1)
       return true
     }
+
+    console.log("❌ No credits available")
     return false
   }
 
   // Add a function to reset credits to 5 for testing
   const resetCredits = () => {
+    console.log("💰 Manually resetting credits to 5")
     setCredits(5)
     console.log("Credits reset to 5")
   }

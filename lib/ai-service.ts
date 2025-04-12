@@ -7,13 +7,31 @@ export async function generateSection(
   prompt: string,
   theme: Theme,
 ): Promise<{ code: string; variant: number }> {
-  console.log("Generating section:", sectionType, prompt)
-  return generateSectionAction(sectionType, prompt, theme)
+  console.log("🔍 AI Service: generateSection called with:", { sectionType, prompt })
+  console.log("🔍 Theme being used:", theme)
+
+  try {
+    const result = await generateSectionAction(sectionType, prompt, theme)
+    console.log("✅ AI Service: generateSection completed successfully")
+    return result
+  } catch (error) {
+    console.error("❌ AI Service: generateSection error:", error)
+    throw error
+  }
 }
 
 // Function to analyze a section using the server action
 export async function analyzeSection(section: Section, currentCode: string): Promise<{ suggestions: string[] }> {
-  return analyzeSectionAction(section, currentCode)
+  console.log("🔍 AI Service: analyzeSection called with:", { section, currentCode })
+
+  try {
+    const result = await analyzeSectionAction(section, currentCode)
+    console.log("✅ AI Service: analyzeSection completed successfully")
+    return result
+  } catch (error) {
+    console.error("❌ AI Service: analyzeSection error:", error)
+    throw error
+  }
 }
 
 // Mock suggestions for section analysis

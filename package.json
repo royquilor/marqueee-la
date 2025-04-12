@@ -63,8 +63,7 @@
     "jszip": "latest",
     "file-saver": "latest",
     "ai": "latest",
-    "@ai-sdk/anthropic": "latest",
-    "@anthropic-ai/sdk": "latest"
+    "@ai-sdk/anthropic": "latest"
   },
   "devDependencies": {
     "@types/node": "^22",
