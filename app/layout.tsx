@@ -120,8 +120,28 @@ const honk = Honk({
 // The CSS variables are set up to use these when available or fall back to Google fonts
 
 export const metadata: Metadata = {
-  title: "TaskAI Dashboard",
-  description: "AI-powered task management for design agencies",
+  title: "Marqueee.dev - Try different designs fast",
+  description: "Explore different design themes, hit the right arrow key, hit CMD + R.",
+  openGraph: {
+    title: "Marqueee.dev - Try different designs fast",
+    description: "Explore different design themes, hit the right arrow key, hit CMD + R.",
+    type: "website",
+    url: "https://marqueee.dev",
+    images: [
+      {
+        url: "/og-image.png", // Updated to use the new image
+        width: 1200,
+        height: 630,
+        alt: "Marqueee.dev - Try different designs fast",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Marqueee.dev - Try different designs fast",
+    description: "Explore different design themes, hit the right arrow key, hit CMD + R.",
+    images: ["/og-image.png"], // Updated to use the new image
+  },
     generator: 'v0.dev'
 }
 

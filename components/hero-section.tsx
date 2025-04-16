@@ -301,8 +301,7 @@ export function HeroSection() {
                 />
               </h1>
               <p className="animate-fade-in-delay-1 mx-auto mt-4 max-w-2xl text-xl text-balance text-muted-foreground px-4">
-                Streamline your design workflow with AI-powered task management. Boost productivity and keep your team
-                in sync.
+                Try different design themes fast. Built on Shadcn ui. Hit the right arrow key, or press CMD + R.
               </p>
               <div className="animate-fade-in-delay-2">
                 <EmailSubscriptionForm />
