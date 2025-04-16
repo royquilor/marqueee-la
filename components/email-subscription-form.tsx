@@ -203,18 +203,6 @@ export function EmailSubscriptionForm({ className, theme }: EmailSubscriptionFor
     return () => document.removeEventListener("mousemove", handleMouseMove)
   }, [])
 
-  // Add this near the top of the component, after the other useEffect hooks
-  useEffect(() => {
-    // Check if there's any stored submission state and clear it
-    const storedSubmission = localStorage.getItem("emailSubmitted")
-    if (storedSubmission) {
-      // For debugging only - remove this in production
-      console.log("Found stored submission state, clearing it")
-      localStorage.removeItem("emailSubmitted")
-      setIsSubmitted(false)
-    }
-  }, [])
-
   // Email validation function (client-side)
   const validateEmail = (email: string) => {
     const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/

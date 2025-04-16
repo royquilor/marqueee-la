@@ -88,6 +88,44 @@
     --sidebar-border: 240 3.7% 25%; /* Updated: increased lightness for better visibility */
     --sidebar-ring: 240 4.9% 83.9%;
   }
+
+  /* More specific font rules for theme variants */
+  .minecraft-theme h1,
+  .minecraft-theme h2,
+  .minecraft-theme h3,
+  .minecraft-theme h4,
+  .minecraft-theme h5,
+  .minecraft-theme h6 {
+    font-family: var(--font-press-start-2p), "Press Start 2P", "VT323", monospace !important;
+  }
+
+  .tron-theme h1,
+  .tron-theme h2,
+  .tron-theme h3,
+  .tron-theme h4,
+  .tron-theme h5,
+  .tron-theme h6 {
+    font-family: var(--font-bruno-ace), "Bruno Ace", sans-serif !important;
+  }
+
+  /* Ensure spans inside headings inherit the font */
+  .minecraft-theme h1 span,
+  .minecraft-theme h2 span,
+  .minecraft-theme h3 span,
+  .minecraft-theme h4 span,
+  .minecraft-theme h5 span,
+  .minecraft-theme h6 span {
+    font-family: var(--font-press-start-2p), "Press Start 2P", "VT323", monospace !important;
+  }
+
+  .tron-theme h1 span,
+  .tron-theme h2 span,
+  .tron-theme h3 span,
+  .tron-theme h4 span,
+  .tron-theme h5 span,
+  .tron-theme h6 span {
+    font-family: var(--font-bruno-ace), "Bruno Ace", sans-serif !important;
+  }
 }
 
 /* Update the Minecraft theme to use the new font variables */
@@ -687,9 +725,22 @@
 /* Tron theme styles */
 .tron-heading {
   font-family: var(--tron-heading-font);
-  text-transform: uppercase;
   letter-spacing: 0.1em;
   line-height: 1.2;
+}
+
+/* Tron text outline with glow effect for Tron theme */
+.tron-text-outline {
+  color: transparent;
+  -webkit-text-stroke: 1px rgba(255, 50, 50, 0.8); /* Changed from white to red */
+  text-shadow: 0 0 10px rgba(255, 50, 50, 0.8), 0 0 20px rgba(255, 50, 50, 0.5);
+  letter-spacing: 0.15em;
+  font-family: var(--tron-heading-font); /* Ensure Bruno Ace font is used */
+}
+
+/* Add this to ensure Tron theme h1 doesn't get uppercase */
+.tron-theme h1.tron-text-outline {
+  text-transform: none;
 }
 
 .tron-text {
@@ -701,15 +752,6 @@
 .tron-neon {
   color: white;
   text-shadow: 0 0 5px rgba(255, 50, 50, 0.8), 0 0 10px rgba(255, 50, 50, 0.5), 0 0 15px rgba(255, 50, 50, 0.3);
-}
-
-/* Tron text outline with glow effect for Tron theme */
-.tron-text-outline {
-  color: transparent;
-  -webkit-text-stroke: 1px rgba(255, 50, 50, 0.8); /* Changed from white to red */
-  text-shadow: 0 0 10px rgba(255, 50, 50, 0.8), 0 0 20px rgba(255, 50, 50, 0.5);
-  letter-spacing: 0.15em;
-  font-family: var(--tron-heading-font); /* Ensure Bruno Ace font is used */
 }
 
 .tron-neon-box {
@@ -776,28 +818,4 @@
 /* Add this to the existing Tron theme styles in globals.css */
 .tron-theme .progress-indicator {
   background-color: rgba(255, 50, 50, 0.8);
-  box-shadow: 0 0 5px rgba(255, 50, 50, 0.8);
-}
-
-/* Add this to the Tron theme styles section */
-/* Tron form input styling */
-.tron-theme input[type="email"],
-.tron-theme input[type="text"] {
-  background-color: rgba(0, 0, 0, 0.7);
-  border: 1px solid rgba(255, 50, 50, 0.5);
-  color: white;
-  font-family: var(--tron-heading-font);
-  letter-spacing: 0.05em;
-}
-
-.tron-theme input[type="email"]:focus,
-.tron-theme input[type="text"]:focus {
-  border-color: rgba(255, 50, 50, 0.8);
-  box-shadow: 0 0 5px rgba(255, 50, 50, 0.5);
-}
-
-.tron-theme input::placeholder {
-  color: rgba(255, 255, 255, 0.5);
-  font-family: var(--tron-heading-font);
-  letter-spacing: 0.05em;
-}
+  box-shadow: 0 0 5px rgba(255, 50, 50,
