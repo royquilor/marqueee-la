@@ -7,22 +7,60 @@ import { DynamicIslandMenu, type ThemeSettings } from "./dynamic-island-menu"
 import { MarqueeHeading } from "./marquee-heading"
 import { EmailSubscriptionForm } from "./email-subscription-form"
 
+// Define system font stacks
+const SYSTEM_HEADING_FONT =
+  "system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif"
+const SYSTEM_TEXT_FONT =
+  "system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif"
+
+// Define theme variants with system fonts as defaults
+const themeVariants = {
+  variant1: {
+    headingFont: SYSTEM_HEADING_FONT,
+    textFont: SYSTEM_TEXT_FONT,
+    color: "blue-600",
+    spacing: "Default",
+    radius: "Default",
+    theme: "dark" as const,
+  },
+  variant2: {
+    headingFont: "var(--font-instrument-serif), " + SYSTEM_HEADING_FONT,
+    textFont: SYSTEM_TEXT_FONT,
+    color: "purple-600",
+    spacing: "Comfortable",
+    radius: "Large",
+    theme: "dark" as const,
+  },
+  variant3: {
+    headingFont: SYSTEM_HEADING_FONT,
+    textFont: SYSTEM_TEXT_FONT,
+    color: "green-600",
+    spacing: "Compact",
+    radius: "Small",
+    theme: "dark" as const,
+  },
+}
+
 export function HeroSection() {
   const [heroVariant, setHeroVariant] = useState<1 | 2 | 3>(1)
   const [direction, setDirection] = useState<1 | -1>(1) // 1 for right, -1 for left
   const [themeSettings, setThemeSettings] = useState<ThemeSettings>({
-    headingFont: "Inter, sans-serif",
-    textFont: "Inter, sans-serif",
+    headingFont: SYSTEM_HEADING_FONT,
+    textFont: SYSTEM_TEXT_FONT,
     color: "blue-600",
     spacing: "Default",
     radius: "Default",
     theme: "dark",
   })
 
-  // Apply initial spacing class on mount
+  // Apply initial spacing class and theme on mount
   useEffect(() => {
     const spacingClass = themeSettings.spacing.toLowerCase()
     document.documentElement.classList.add(`spacing-${spacingClass}`)
+
+    // Apply initial font settings
+    document.documentElement.style.setProperty("--heading-font-family", themeSettings.headingFont)
+    document.documentElement.style.setProperty("--text-font-family", themeSettings.textFont)
 
     return () => {
       document.documentElement.classList.remove(`spacing-${spacingClass}`)
@@ -34,16 +72,32 @@ export function HeroSection() {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "ArrowRight") {
         setDirection(1)
-        setHeroVariant((prev) => (prev === 3 ? 1 : ((prev + 1) as 1 | 2 | 3)))
+        const newVariant = heroVariant === 3 ? 1 : ((heroVariant + 1) as 1 | 2 | 3)
+        setHeroVariant(newVariant)
+
+        // Apply the corresponding theme
+        const themeKey = `variant${newVariant}` as keyof typeof themeVariants
+        handleThemeSettings({
+          ...themeVariants[themeKey],
+          theme: themeSettings.theme, // Preserve current theme mode
+        })
       } else if (e.key === "ArrowLeft") {
         setDirection(-1)
-        setHeroVariant((prev) => (prev === 1 ? 3 : ((prev - 1) as 1 | 2 | 3)))
+        const newVariant = heroVariant === 1 ? 3 : ((heroVariant - 1) as 1 | 2 | 3)
+        setHeroVariant(newVariant)
+
+        // Apply the corresponding theme
+        const themeKey = `variant${newVariant}` as keyof typeof themeVariants
+        handleThemeSettings({
+          ...themeVariants[themeKey],
+          theme: themeSettings.theme, // Preserve current theme mode
+        })
       }
     }
 
     window.addEventListener("keydown", handleKeyDown)
     return () => window.removeEventListener("keydown", handleKeyDown)
-  }, [])
+  }, [heroVariant, themeSettings.theme])
 
   const handleThemeSettings = (newSettings: ThemeSettings) => {
     setThemeSettings(newSettings)

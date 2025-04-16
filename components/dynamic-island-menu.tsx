@@ -17,9 +17,20 @@ const fontCategories = [
   {
     name: "Clean",
     fonts: [
-      { name: "Inter", value: "Inter, sans-serif" },
-      { name: "Geist", value: "Geist, sans-serif" },
-      { name: "Aileron", value: "Aileron, sans-serif" },
+      {
+        name: "System UI",
+        value: "system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif",
+      },
+      { name: "Inter", value: "var(--font-inter), system-ui, sans-serif" },
+      { name: "Satoshi", value: "var(--font-satoshi), system-ui, sans-serif" },
+    ],
+  },
+  {
+    name: "Elegant",
+    fonts: [
+      { name: "System Serif", value: "Georgia, Cambria, 'Times New Roman', Times, serif" },
+      { name: "Instrument Serif", value: "var(--font-instrument-serif), Georgia, serif" },
+      { name: "Monument Grotesk", value: "var(--font-monument-grotesk), system-ui, sans-serif" },
     ],
   },
   {
@@ -28,14 +39,6 @@ const fontCategories = [
       { name: "DT Getai", value: "DT Getai, sans-serif" },
       { name: "Havana", value: "Havana, sans-serif" },
       { name: "Open Runde", value: "Open Runde, sans-serif" },
-    ],
-  },
-  {
-    name: "Elegant",
-    fonts: [
-      { name: "Instrument Serif", value: "var(--font-instrument-serif), serif" },
-      { name: "Bagnard", value: "Bagnard, serif" },
-      { name: "DT Nightingale", value: "DT Nightingale, serif" },
     ],
   },
   {

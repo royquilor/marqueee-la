@@ -4,6 +4,17 @@
 
 @layer base {
   :root {
+    /* Font fallback system */
+    /* These variables will use local fonts when available, with web fonts as fallbacks */
+    --heading-font-family: var(--font-monument-grotesk, var(--font-instrument-serif)), "Instrument Serif", system-ui,
+      -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    --text-font-family: var(--font-satoshi, var(--font-inter)), "Inter", system-ui, -apple-system, BlinkMacSystemFont,
+      "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    --display-font-family: var(--font-cabinet-grotesk, var(--font-instrument-serif)), "Instrument Serif", system-ui,
+      -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    --mono-font-family: var(--font-jetbrains-mono, "JetBrains Mono"), ui-monospace, SFMono-Regular, Menlo, Monaco,
+      Consolas, "Liberation Mono", "Courier New", monospace;
+
     /* Default color values */
     --primary-hue: 215;
     --primary-saturation: 83%;
@@ -28,8 +39,6 @@
     --input: 240 5.9% 90%;
     --ring: 240 5.9% 10%;
     --radius: 0.5rem;
-    --heading-font-family: "Inter", sans-serif;
-    --text-font-family: "Inter", sans-serif;
 
     /* Sidebar variables */
     --sidebar-background: 0 0% 100%;
@@ -83,7 +92,7 @@
     @apply bg-background text-foreground;
   }
 
-  /* Apply different fonts to different elements */
+  /* Apply different fonts to different elements using the fallback system */
   h1,
   h2,
   h3,
@@ -116,6 +125,18 @@
   /* Spans that are not inside headings should use text font */
   span:not(h1 span):not(h2 span):not(h3 span):not(h4 span):not(h5 span):not(h6 span) {
     font-family: var(--text-font-family);
+  }
+
+  /* Add specific styling for code elements */
+  code,
+  pre,
+  .code {
+    font-family: var(--mono-font-family);
+  }
+
+  /* Add specific styling for display text (large headlines, etc.) */
+  .display-text {
+    font-family: var(--display-font-family);
   }
 }
 
