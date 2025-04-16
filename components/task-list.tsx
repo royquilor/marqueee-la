@@ -312,6 +312,15 @@ export function TaskList({ className, heroVariant = 1, pixelationLevel = 3 }: Ta
           )
         }
 
+        if (heroVariant === 3) {
+          return (
+            <Avatar className="h-6 w-6 tron-avatar-blend">
+              <AvatarImage src={assignee.avatar || "/placeholder.svg"} alt={assignee.name} />
+              <AvatarFallback>{assignee.initials}</AvatarFallback>
+            </Avatar>
+          )
+        }
+
         return (
           <Avatar className="h-6 w-6">
             <AvatarImage src={assignee.avatar || "/placeholder.svg"} alt={assignee.name} />

@@ -79,6 +79,11 @@ export function DashboardHeader({ heroVariant = 1, pixelationLevel = 3 }: Dashbo
                   size={7}
                   pixelSize={pixelationLevel}
                 />
+              ) : heroVariant === 3 ? (
+                <Avatar className="h-7 w-7 tron-avatar-blend">
+                  <AvatarImage src={getProfessionalPortraitAvatar() || "/placeholder.svg"} alt="User" />
+                  <AvatarFallback className="hidden">JD</AvatarFallback>
+                </Avatar>
               ) : (
                 <Avatar className="h-7 w-7">
                   <AvatarImage src={getProfessionalPortraitAvatar() || "/placeholder.svg"} alt="User" />

@@ -9,7 +9,7 @@ import { SidebarProvider } from "@/components/ui/sidebar"
 
 interface DashboardProps {
   heroVariant?: 1 | 2 | 3
-  pixelationLevel?: number // Add this line
+  pixelationLevel?: number
 }
 
 export default function Dashboard({ heroVariant = 1, pixelationLevel = 3 }: DashboardProps) {
@@ -50,98 +50,23 @@ export default function Dashboard({ heroVariant = 1, pixelationLevel = 3 }: Dash
     return () => document.removeEventListener("mousedown", handleClickOutside)
   }, [activeComponent])
 
-  // Render different dashboard content based on hero variant
+  // Render dashboard content with consistent spacing across all variants
   const renderDashboardContent = () => {
-    switch (heroVariant) {
-      case 1:
-        return (
-          <>
-            {selectedView === "tasks" && (
-              <div className="flex h-full flex-col">
-                <ProjectOverview />
-                <TaskList className="flex-1" heroVariant={heroVariant} pixelationLevel={pixelationLevel} />
-              </div>
-            )}
-            {selectedView === "projects" && (
-              <div className="h-full p-4">
-                <h2 className="text-xl font-semibold">Projects</h2>
-                <p className="text-muted-foreground">Your projects will appear here.</p>
-              </div>
-            )}
-            {selectedView === "team" && (
-              <div className="h-full p-4">
-                <h2 className="text-xl font-semibold">Team</h2>
-                <p className="text-muted-foreground">Your team members will appear here.</p>
-              </div>
-            )}
-            {selectedView === "analytics" && (
-              <div className="h-full p-4">
-                <h2 className="text-xl font-semibold">Analytics</h2>
-                <p className="text-muted-foreground">Your analytics will appear here.</p>
-              </div>
-            )}
-          </>
-        )
-
-      case 2:
-        return (
-          <>
-            {selectedView === "tasks" && (
-              <div className="flex h-full flex-col">
-                <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-4 mb-2 px-4 pt-3">
-                  <div className="bg-card p-4 rounded-lg border border-border/50">
-                    <h3 className="text-sm font-medium mb-2">Active Tasks</h3>
-                    <div className="text-2xl font-bold">12</div>
-                  </div>
-                  <div className="bg-card p-4 rounded-lg border border-border/50">
-                    <h3 className="text-sm font-medium mb-2">Team Workload</h3>
-                    <div className="text-2xl font-bold">78%</div>
-                  </div>
-                  <div className="bg-card p-4 rounded-lg border border-border/50">
-                    <h3 className="text-sm font-medium mb-2">Upcoming Deadlines</h3>
-                    <div className="text-2xl font-bold">3</div>
-                  </div>
-                  <div className="bg-card p-4 rounded-lg border border-border/50">
-                    <h3 className="text-sm font-medium mb-2">AI Insights</h3>
-                    <div className="text-2xl font-bold">5</div>
-                  </div>
-                </div>
-                <TaskList className="flex-1" heroVariant={heroVariant} />
-              </div>
-            )}
-            {selectedView !== "tasks" && (
-              <div className="h-full p-4">
-                <h2 className="text-xl font-semibold">
-                  {selectedView.charAt(0).toUpperCase() + selectedView.slice(1)}
-                </h2>
-                <p className="text-muted-foreground">Your {selectedView} will appear here.</p>
-              </div>
-            )}
-          </>
-        )
-
-      case 3:
-        return (
-          <>
-            {selectedView === "tasks" && (
-              <div className="flex h-full flex-col">
-                {/* Project overview is hidden for variant 3 */}
-                <TaskList className="flex-1" heroVariant={heroVariant} />
-              </div>
-            )}
-            {selectedView !== "tasks" && (
-              <div className="h-full p-4">
-                <h2 className="text-xl font-semibold">
-                  {selectedView.charAt(0).toUpperCase() + selectedView.slice(1)}
-                </h2>
-                <p className="text-muted-foreground">Your {selectedView} will appear here.</p>
-              </div>
-            )}
-          </>
-        )
-
-      default:
-        return null
+    if (selectedView === "tasks") {
+      return (
+        <div className="flex h-full flex-col">
+          {/* Show ProjectOverview for all variants for consistent spacing */}
+          <ProjectOverview />
+          <TaskList className="flex-1" heroVariant={heroVariant} pixelationLevel={pixelationLevel} />
+        </div>
+      )
+    } else {
+      return (
+        <div className="h-full p-4">
+          <h2 className="text-xl font-semibold">{selectedView.charAt(0).toUpperCase() + selectedView.slice(1)}</h2>
+          <p className="text-muted-foreground">Your {selectedView} will appear here.</p>
+        </div>
+      )
     }
   }
 

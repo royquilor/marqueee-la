@@ -24,10 +24,10 @@ export function ThemeLoader({ variant, message = "Cooking theme...", progress = 
         }
       case 3:
         return {
-          fontFamily: "var(--heading-font-family)",
-          className: "text-primary",
-          iconClass: "",
-          bgClass: "bg-background",
+          fontFamily: "var(--tron-heading-font)",
+          className: "tron-text-outline", // Changed from tron-neon to tron-text-outline
+          iconClass: "tron-glow",
+          bgClass: "tron-grid-bg",
         }
       default:
         return {
@@ -48,6 +48,8 @@ export function ThemeLoader({ variant, message = "Cooking theme...", progress = 
     >
       {variant === 2 && <MinecraftStarsBackground starCount={20} starColor="#ffdd00" />}
 
+      {variant === 3 && <div className="absolute inset-0 tron-red-glow-bg pointer-events-none"></div>}
+
       <motion.div
         className="flex flex-col items-center justify-center gap-6"
         initial={{ opacity: 0, scale: 0.9 }}
@@ -57,6 +59,13 @@ export function ThemeLoader({ variant, message = "Cooking theme...", progress = 
       >
         {variant === 2 ? (
           <MinecraftBlockLoader size={16} color="#ffdd00" />
+        ) : variant === 3 ? (
+          <motion.div
+            animate={{ rotate: 360 }}
+            transition={{ duration: 2, repeat: Number.POSITIVE_INFINITY, ease: "linear" }}
+          >
+            <Loader2 className={`w-12 h-12 ${style.iconClass}`} />
+          </motion.div>
         ) : (
           <motion.div
             animate={{ rotate: 360 }}
@@ -77,13 +86,15 @@ export function ThemeLoader({ variant, message = "Cooking theme...", progress = 
 
         {/* Progress bar */}
         <motion.div
-          className={`w-48 h-2 ${variant === 2 ? "" : "rounded-full"} bg-background/20 overflow-hidden mt-2`}
+          className={`w-48 h-2 ${variant === 2 ? "" : variant === 3 ? "" : "rounded-full"} bg-background/20 overflow-hidden mt-2`}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.3 }}
         >
           <motion.div
-            className={`h-full ${variant === 2 ? "minecraft-pixelated" : ""} ${variant === 2 ? "bg-yellow-400" : "bg-primary"}`}
+            className={`h-full ${variant === 2 ? "minecraft-pixelated" : variant === 3 ? "tron-glow" : ""} ${
+              variant === 2 ? "bg-yellow-400" : variant === 3 ? "bg-red-600" : "bg-primary"
+            }`}
             initial={{ width: 0 }}
             animate={{ width: `${progress}%` }}
             transition={{ duration: 0.3 }}

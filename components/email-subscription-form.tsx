@@ -21,6 +21,7 @@ function SubscribeButton({ isSubmitted }: { isSubmitted: boolean }) {
   const { pending } = useFormStatus()
   const formContext = useContext(FormContext)
   const isMinecraft = formContext?.theme === "minecraft"
+  const isTron = formContext?.theme === "tron"
 
   if (isMinecraft) {
     return (
@@ -65,7 +66,53 @@ function SubscribeButton({ isSubmitted }: { isSubmitted: boolean }) {
             <Check className="h-5 w-5" />
           </motion.div>
         ) : (
-          "SUBSCRIBE"
+          "Join"
+        )}
+      </motion.button>
+    )
+  }
+
+  if (isTron) {
+    return (
+      <motion.button
+        type="submit"
+        className={cn("tron-button", isSubmitted ? "w-12 p-0 flex items-center justify-center" : "px-6")}
+        disabled={pending || isSubmitted}
+        style={{
+          opacity: isSubmitted ? 1 : undefined,
+          minWidth: isSubmitted ? "48px" : "120px",
+          fontFamily: "var(--tron-heading-font)",
+        }}
+        animate={{
+          width: isSubmitted ? "48px" : "auto",
+        }}
+        transition={{
+          type: "spring",
+          stiffness: 300,
+          damping: 20,
+          duration: 0.3,
+        }}
+      >
+        {pending ? (
+          <>
+            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+            <span>PROCESSING</span>
+          </>
+        ) : isSubmitted ? (
+          <motion.div
+            initial={{ scale: 0 }}
+            animate={{ scale: 1 }}
+            transition={{
+              type: "spring",
+              stiffness: 400,
+              damping: 10,
+              delay: 0.1,
+            }}
+          >
+            <Check className="h-5 w-5" />
+          </motion.div>
+        ) : (
+          "Join"
         )}
       </motion.button>
     )
@@ -119,7 +166,7 @@ function SubscribeButton({ isSubmitted }: { isSubmitted: boolean }) {
           <Check className="h-5 w-5" />
         </motion.div>
       ) : (
-        "Subscribe"
+        "Join the Waitlist"
       )}
     </motion.button>
   )
@@ -273,6 +320,8 @@ export function EmailSubscriptionForm({ className, theme }: EmailSubscriptionFor
                       "h-12 bg-background/50 backdrop-blur-sm border-border/50 focus-visible:ring-primary",
                       hasError && "border-red-500 focus-visible:ring-red-500 ring-2 ring-red-500",
                       theme === "minecraft" && "minecraft-input minecraft-pixelated",
+                      theme === "tron" &&
+                        "border-primary/50 focus-visible:border-primary focus-visible:ring-primary bg-black/30",
                     )}
                     value={email}
                     onChange={handleEmailChange}
@@ -301,12 +350,12 @@ export function EmailSubscriptionForm({ className, theme }: EmailSubscriptionFor
           </motion.div>
 
           <motion.p
-            className="text-sm text-muted-foreground mt-2 text-center"
+            className={cn("text-sm text-muted-foreground mt-2", theme === "tron" ? "text-left" : "text-center")}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.3 }}
             key={isSubmitted ? "success" : "default"}
           >
-            {isSubmitted ? successMessage : "Join our newsletter to get the latest updates and features."}
+            {isSubmitted ? successMessage : "Thank you for joining!"}
           </motion.p>
         </form>
       </div>

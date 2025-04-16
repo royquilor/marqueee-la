@@ -34,9 +34,9 @@ const themeVariants = {
     theme: "dark" as const,
   },
   variant3: {
-    headingFont: SYSTEM_HEADING_FONT,
-    textFont: SYSTEM_TEXT_FONT,
-    color: "green-600",
+    headingFont: "var(--font-bruno-ace), 'Bruno Ace', sans-serif",
+    textFont: "var(--font-bruno-ace), 'Bruno Ace', sans-serif", // Changed from Audiowide to Bruno Ace
+    color: "red-600",
     spacing: "Compact",
     radius: "Small",
     theme: "dark" as const,
@@ -324,6 +324,10 @@ export function HeroSection() {
               x: { type: "spring", stiffness: 100, damping: 25 },
               opacity: { duration: 0.5 },
             }}
+            onAnimationComplete={() => {
+              // When this animation completes, we can trigger dashboard animation
+              // This is handled by the delay in the dashboard motion.div
+            }}
           >
             {/* Add the stars background for variant 2 */}
             <MinecraftStarsBackground starCount={40} starColor="#ffdd00" />
@@ -362,35 +366,48 @@ export function HeroSection() {
         {heroVariant === 3 && contentVisible && (
           <motion.div
             key="variant-3"
-            className="w-full relative z-5 px-4 sm:px-6 lg:px-8"
+            className="w-full relative z-5 px-4 sm:px-6 lg:px-8 tron-theme"
             custom={direction}
             variants={marqueeVariants}
             initial="enter"
             animate="center"
             exit="exit"
             transition={{
-              x: { type: "spring", stiffness: 100, damping: 25 }, // Reduced stiffness, increased damping
-              opacity: { duration: 0.5 }, // Increased duration for opacity
+              x: { type: "spring", stiffness: 100, damping: 25 },
+              opacity: { duration: 0.5 },
             }}
           >
-            <div className="py-10 w-full flex flex-col items-start text-left">
+            {/* Red glow background */}
+            <div className="absolute inset-0 tron-red-glow-bg pointer-events-none"></div>
+
+            <div className="py-10 w-full flex flex-col items-start text-left relative z-10">
               <motion.h1
-                className="text-2xl font-medium tracking-tighter text-foreground sm:text-3xl md:text-4xl max-w-3xl"
-                initial={{ opacity: 0, x: -20 }} // Reduced x distance
+                className="text-4xl font-bold tracking-wider sm:text-5xl md:text-6xl max-w-3xl tron-text-outline"
+                initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.3, duration: 0.7 }} // Slower animation
+                transition={{ delay: 0.3, duration: 0.7 }}
               >
-                Try different designs fast.
+                NO GOING BACK
               </motion.h1>
+
               <motion.p
-                className="mt-6 max-w-lg text-base text-balance text-muted-foreground"
-                initial={{ opacity: 0, x: -20 }} // Reduced x distance
+                className="mt-6 max-w-lg text-base text-muted-foreground tron-text"
+                initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.5, duration: 0.7 }} // Slower animation
+                transition={{ delay: 0.5, duration: 0.7 }}
+                style={{ fontFamily: "var(--tron-heading-font)" }}
               >
-                Get inspiration on website sections and components based on Shadcn/UI.
+                Enter the grid. Experience the future of design with our AI-powered interface.
               </motion.p>
-              {/* CTA button removed from variant 3 */}
+
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.7, duration: 0.7 }}
+                className="mt-8 w-full max-w-md"
+              >
+                <EmailSubscriptionForm theme="tron" />
+              </motion.div>
             </div>
           </motion.div>
         )}
@@ -399,7 +416,7 @@ export function HeroSection() {
   }
 
   return (
-    <div className="relative overflow-hidden bg-background">
+    <div className={`relative overflow-hidden bg-background ${heroVariant === 3 ? "tron-grid-bg" : ""}`}>
       {/* Loading overlay */}
       <AnimatePresence>
         {isLoading && targetVariant && (
@@ -422,9 +439,11 @@ export function HeroSection() {
         }`}
         style={{
           background:
-            heroVariant !== 2
+            heroVariant !== 2 && heroVariant !== 3
               ? `linear-gradient(to top, hsl(var(--primary) / 0.6) 0%, hsl(var(--primary) / 0.2) 40%, transparent 100%)`
-              : undefined,
+              : heroVariant === 3
+                ? `linear-gradient(to top, rgba(255, 50, 50, 0.3) 0%, rgba(255, 50, 50, 0.1) 40%, transparent 100%)`
+                : undefined,
           zIndex: 0,
         }}
         aria-hidden="true"
@@ -438,11 +457,23 @@ export function HeroSection() {
         <div className="relative mx-auto max-w-screen-2xl">
           {/* Dashboard container */}
           <motion.div
-            className="relative h-[600px] overflow-hidden rounded-xl border border-border bg-card/30 shadow-xl dark:border-border/90 dark:bg-card/20 backdrop-blur-sm ring-4 ring-black/20 dark:ring-black/20"
+            className={`relative h-[600px] overflow-hidden rounded-xl border border-border bg-card/30 shadow-xl dark:border-border/90 dark:bg-card/20 backdrop-blur-sm ${
+              heroVariant === 3 ? "tron-neon-box" : "ring-4 ring-black/20 dark:ring-black/20"
+            }`}
             key={`dashboard-${heroVariant}`}
-            initial={{ opacity: 0.9, scale: 0.99 }} // More subtle initial values
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.8 }} // Slower animation
+            initial={{
+              opacity: 0.9,
+              scale: heroVariant === 2 ? 0.5 : 0.99, // Start at half size for Minecraft theme
+            }}
+            animate={{
+              opacity: 1,
+              scale: 1,
+            }}
+            transition={{
+              duration: heroVariant === 2 ? 1.2 : 0.8, // Longer animation for Minecraft
+              delay: heroVariant === 2 ? 1.5 : heroVariant === 3 ? 1.0 : 0, // Delay for Minecraft and Tron themes
+              ease: heroVariant === 2 ? "backOut" : "easeOut", // Bouncy effect for Minecraft
+            }}
           >
             <Dashboard heroVariant={heroVariant} />
           </motion.div>

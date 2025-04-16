@@ -2,19 +2,33 @@ import type React from "react"
 import type { Metadata } from "next"
 import "@/app/globals.css"
 import "@/components/ui/sidebar-override.css"
-import { Instrument_Serif, Inter, Press_Start_2P, Silkscreen } from "next/font/google"
+import {
+  Instrument_Serif,
+  Inter,
+  Press_Start_2P,
+  Silkscreen,
+  Orbitron,
+  Audiowide,
+  Bruno_Ace,
+  Bruno_Ace_SC,
+  DM_Sans,
+  Manrope,
+  Nunito,
+  Playfair_Display,
+  Honk,
+} from "next/font/google"
 
 // Import Google fonts as optional enhancements, not required fallbacks
 const instrumentSerif = Instrument_Serif({
   weight: ["400"],
   subsets: ["latin"],
-  display: "optional", // Changed from "swap" to "optional"
+  display: "optional",
   variable: "--font-instrument-serif",
 })
 
 const inter = Inter({
   subsets: ["latin"],
-  display: "optional", // Changed from "swap" to "optional"
+  display: "optional",
   variable: "--font-inter",
 })
 
@@ -32,6 +46,74 @@ const silkscreen = Silkscreen({
   subsets: ["latin"],
   display: "optional",
   variable: "--font-silkscreen",
+})
+
+// Add Orbitron for Tron theme
+const orbitron = Orbitron({
+  weight: ["400", "500", "700"],
+  subsets: ["latin"],
+  display: "optional",
+  variable: "--font-orbitron",
+})
+
+// Add Audiowide for Tron theme
+const audiowide = Audiowide({
+  weight: ["400"],
+  subsets: ["latin"],
+  display: "optional",
+  variable: "--font-audiowide",
+})
+
+// Add Bruno Ace for Tron theme
+const brunoAce = Bruno_Ace({
+  weight: ["400"],
+  subsets: ["latin"],
+  display: "optional",
+  variable: "--font-bruno-ace",
+})
+
+// Add Bruno Ace SC for Tron theme
+const brunoAceSC = Bruno_Ace_SC({
+  weight: ["400"],
+  subsets: ["latin"],
+  display: "optional",
+  variable: "--font-bruno-ace-sc",
+})
+
+// Add DM Sans
+const dmSans = DM_Sans({
+  subsets: ["latin"],
+  display: "optional",
+  variable: "--font-dm-sans",
+})
+
+// Add Manrope
+const manrope = Manrope({
+  subsets: ["latin"],
+  display: "optional",
+  variable: "--font-manrope",
+})
+
+// Add Nunito
+const nunito = Nunito({
+  subsets: ["latin"],
+  display: "optional",
+  variable: "--font-nunito",
+})
+
+// Add Playfair Display
+const playfairDisplay = Playfair_Display({
+  subsets: ["latin"],
+  display: "optional",
+  variable: "--font-playfair-display",
+})
+
+// Add Honk
+const honk = Honk({
+  weight: ["400"],
+  subsets: ["latin"],
+  display: "optional",
+  variable: "--font-honk",
 })
 
 // Note: Local fonts will be added in the local development environment
@@ -52,7 +134,7 @@ export default function RootLayout({
     <html
       lang="en"
       suppressHydrationWarning
-      className={`${instrumentSerif.variable} ${inter.variable} ${pressStart2P.variable} ${silkscreen.variable}`}
+      className={`${instrumentSerif.variable} ${inter.variable} ${pressStart2P.variable} ${silkscreen.variable} ${orbitron.variable} ${audiowide.variable} ${brunoAce.variable} ${brunoAceSC.variable} ${dmSans.variable} ${manrope.variable} ${nunito.variable} ${playfairDisplay.variable} ${honk.variable}`}
     >
       <body className="min-h-screen bg-background antialiased">{children}</body>
     </html>

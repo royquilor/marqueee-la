@@ -17,6 +17,9 @@
     /* Update the minecraft font variables */
     --minecraft-heading-font: var(--font-press-start-2p, "Minecraft"), "Press Start 2P", "VT323", monospace;
     --minecraft-text-font: var(--font-silkscreen, "Minecraft"), "Silkscreen", "VT323", sans-serif;
+    /* Add Tron font variables */
+    --tron-heading-font: var(--font-bruno-ace, "Bruno Ace"), "Bruno Ace", sans-serif;
+    --tron-text-font: var(--font-audiowide, "Audiowide"), "Audiowide", sans-serif;
 
     /* Default color values */
     --primary-hue: 215;
@@ -98,6 +101,23 @@
   --radius: 0;
 }
 
+/* Add Tron theme */
+.tron-theme {
+  --primary-hue: 0;
+  --primary-saturation: 100%;
+  --primary: var(--primary-hue) var(--primary-saturation) 50%;
+  --primary-foreground: 0 0% 100%;
+
+  /* Override border radius for angular appearance */
+  --radius: 0.125rem;
+
+  /* Dark background for Tron theme */
+  --background: 240 20% 2%;
+  --foreground: 0 0% 98%;
+  --card: 240 20% 3.9%;
+  --card-foreground: 0 0% 98%;
+}
+
 @layer base {
   * {
     @apply border-border;
@@ -151,6 +171,28 @@
   /* Add specific styling for display text (large headlines, etc.) */
   .display-text {
     font-family: var(--display-font-family);
+  }
+
+  /* Apply Tron fonts */
+  .tron-theme h1,
+  .tron-theme h2,
+  .tron-theme h3,
+  .tron-theme h4,
+  .tron-theme h5,
+  .tron-theme h6 {
+    font-family: var(--tron-heading-font) !important;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .tron-theme p,
+  .tron-theme div,
+  .tron-theme button,
+  .tron-theme input,
+  .tron-theme textarea,
+  .tron-theme label,
+  .tron-theme a {
+    font-family: var(--tron-text-font);
   }
 }
 
@@ -378,6 +420,101 @@
       transform: translateY(10px) translateX(3px);
     }
   }
+
+  /* Add this with the other keyframes */
+  @keyframes minecraft-scale-in {
+    0% {
+      transform: scale(0.5);
+      opacity: 0;
+    }
+    70% {
+      transform: scale(1.05);
+    }
+    100% {
+      transform: scale(1);
+      opacity: 1;
+    }
+  }
+
+  .minecraft-scale-in {
+    animation: minecraft-scale-in 1.2s ease-out forwards;
+  }
+
+  /* Tron animations */
+  @keyframes tron-glow {
+    0%,
+    100% {
+      filter: drop-shadow(0 0 5px rgba(255, 50, 50, 0.8));
+    }
+    50% {
+      filter: drop-shadow(0 0 15px rgba(255, 50, 50, 0.8));
+    }
+  }
+
+  .tron-glow {
+    animation: tron-glow 3s infinite ease-in-out;
+  }
+
+  @keyframes tron-scan-line {
+    0% {
+      transform: translateY(-100%);
+    }
+    100% {
+      transform: translateY(100%);
+    }
+  }
+
+  .tron-scan-line {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .tron-scan-line::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 5px;
+    background: linear-gradient(
+      to bottom,
+      rgba(255, 50, 50, 0) 0%,
+      rgba(255, 50, 50, 0.5) 50%,
+      rgba(255, 50, 50, 0) 100%
+    );
+    animation: tron-scan-line 4s infinite linear;
+    pointer-events: none;
+  }
+
+  /* Digital rain animation for Tron theme */
+  @keyframes tron-digital-rain {
+    0% {
+      transform: translateY(-100%);
+    }
+    100% {
+      transform: translateY(100%);
+    }
+  }
+
+  .tron-digital-rain {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .tron-digital-rain::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: linear-gradient(0deg, rgba(255, 50, 50, 0.1) 25%, transparent 25%),
+      linear-gradient(0deg, transparent 75%, rgba(255, 50, 50, 0.1) 75%);
+    background-size: 4px 4px;
+    animation: tron-digital-rain 20s infinite linear;
+    opacity: 0.3;
+    pointer-events: none;
+  }
 }
 
 @font-face {
@@ -388,8 +525,8 @@
   font-display: swap;
 }
 
-/* Update the @import for Google Fonts to include Press Start 2P */
-@import url("https://fonts.googleapis.com/css2?family=VT323&family=Press+Start+2P&display=swap");
+/* Update the @import for Google Fonts to include Press Start 2P, Orbitron, and Audiowide */
+@import url("https://fonts.googleapis.com/css2?family=VT323&family=Press+Start+2P&family=Orbitron:wght@400;500;700&family=Audiowide&display=swap");
 
 /* Fallback for Minecraft font */
 @import url("https://fonts.googleapis.com/css2?family=VT323&display=swap");
@@ -545,4 +682,122 @@
 /* Minecraft night sky gradient */
 .minecraft-night-sky {
   background: linear-gradient(to bottom, #0c0c1d 0%, #1a1a40 50%, #3d2c14 100%);
+}
+
+/* Tron theme styles */
+.tron-heading {
+  font-family: var(--tron-heading-font);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  line-height: 1.2;
+}
+
+.tron-text {
+  font-family: var(--tron-heading-font); /* Changed from tron-text-font to tron-heading-font */
+  letter-spacing: 0.05em;
+}
+
+/* Tron neon glow effect */
+.tron-neon {
+  color: white;
+  text-shadow: 0 0 5px rgba(255, 50, 50, 0.8), 0 0 10px rgba(255, 50, 50, 0.5), 0 0 15px rgba(255, 50, 50, 0.3);
+}
+
+/* Tron text outline with glow effect for Tron theme */
+.tron-text-outline {
+  color: transparent;
+  -webkit-text-stroke: 1px rgba(255, 50, 50, 0.8); /* Changed from white to red */
+  text-shadow: 0 0 10px rgba(255, 50, 50, 0.8), 0 0 20px rgba(255, 50, 50, 0.5);
+  letter-spacing: 0.15em;
+  font-family: var(--tron-heading-font); /* Ensure Bruno Ace font is used */
+}
+
+.tron-neon-box {
+  position: relative;
+  border: 1px solid rgba(255, 50, 50, 0.8);
+  box-shadow: 0 0 5px rgba(255, 50, 50, 0.8), 0 0 10px rgba(255, 50, 50, 0.5) inset;
+}
+
+/* Tron grid background */
+.tron-grid-bg {
+  background-color: #050510;
+  background-image: linear-gradient(rgba(255, 50, 50, 0.1) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 50, 50, 0.1) 1px, transparent 1px);
+  background-size: 20px 20px;
+  background-position: center center;
+}
+
+/* Tron button */
+.tron-button {
+  position: relative;
+  display: inline-block;
+  padding: 8px 16px;
+  background-color: rgba(0, 0, 0, 0.7);
+  border: 1px solid rgba(255, 50, 50, 0.8);
+  color: white;
+  font-family: var(--tron-heading-font);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  box-shadow: 0 0 5px rgba(255, 50, 50, 0.8);
+  transition: all 0.3s ease;
+}
+
+.tron-button:hover {
+  background-color: rgba(255, 50, 50, 0.2);
+  box-shadow: 0 0 5px rgba(255, 50, 50, 0.8), 0 0 10px rgba(255, 50, 50, 0.5), 0 0 15px rgba(255, 50, 50, 0.3);
+}
+
+/* Tron gradient background */
+.tron-gradient-bg {
+  background: linear-gradient(135deg, #050510 0%, #1a0505 100%);
+}
+
+/* Tron red glow gradient */
+.tron-red-glow-bg {
+  background: radial-gradient(circle at center, rgba(255, 50, 50, 0.2) 0%, rgba(0, 0, 0, 0) 70%);
+}
+
+/* Tron avatar blend effect */
+.tron-avatar-blend {
+  position: relative;
+}
+
+.tron-avatar-blend::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-color: rgba(255, 50, 50, 0.8);
+  mix-blend-mode: color;
+  border-radius: 9999px;
+  z-index: 10;
+  pointer-events: none;
+}
+
+/* Add this to the existing Tron theme styles in globals.css */
+.tron-theme .progress-indicator {
+  background-color: rgba(255, 50, 50, 0.8);
+  box-shadow: 0 0 5px rgba(255, 50, 50, 0.8);
+}
+
+/* Add this to the Tron theme styles section */
+/* Tron form input styling */
+.tron-theme input[type="email"],
+.tron-theme input[type="text"] {
+  background-color: rgba(0, 0, 0, 0.7);
+  border: 1px solid rgba(255, 50, 50, 0.5);
+  color: white;
+  font-family: var(--tron-heading-font);
+  letter-spacing: 0.05em;
+}
+
+.tron-theme input[type="email"]:focus,
+.tron-theme input[type="text"]:focus {
+  border-color: rgba(255, 50, 50, 0.8);
+  box-shadow: 0 0 5px rgba(255, 50, 50, 0.5);
+}
+
+.tron-theme input::placeholder {
+  color: rgba(255, 255, 255, 0.5);
+  font-family: var(--tron-heading-font);
+  letter-spacing: 0.05em;
 }

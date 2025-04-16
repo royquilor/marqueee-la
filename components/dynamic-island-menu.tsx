@@ -23,7 +23,8 @@ const fontCategories = [
         value: "system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif",
       },
       { name: "Inter", value: "var(--font-inter), system-ui, sans-serif" },
-      { name: "Satoshi", value: "var(--font-satoshi), system-ui, sans-serif" },
+      { name: "DM Sans", value: "var(--font-dm-sans), system-ui, sans-serif" },
+      { name: "Manrope", value: "var(--font-manrope), system-ui, sans-serif" },
     ],
   },
   {
@@ -32,16 +33,14 @@ const fontCategories = [
       { name: "Georgia", value: "Georgia, serif" },
       { name: "System Serif", value: "Georgia, Cambria, 'Times New Roman', Times, serif" },
       { name: "Instrument Serif", value: "var(--font-instrument-serif), Georgia, serif" },
-      { name: "Monument Grotesk", value: "var(--font-monument-grotesk), system-ui, sans-serif" },
+      { name: "Playfair Display", value: "var(--font-playfair-display), Georgia, serif" },
     ],
   },
   {
     name: "Fun",
     fonts: [
       { name: "Verdana", value: "Verdana, Geneva, sans-serif" },
-      { name: "DT Getai", value: "DT Getai, sans-serif" },
-      { name: "Havana", value: "Havana, sans-serif" },
-      { name: "Open Runde", value: "Open Runde, sans-serif" },
+      { name: "Nunito", value: "var(--font-nunito), sans-serif" },
     ],
   },
   {
@@ -49,19 +48,18 @@ const fontCategories = [
     fonts: [
       { name: "Courier New", value: "Courier New, Courier, monospace" },
       { name: "Press Start 2P", value: "var(--font-press-start-2p), 'Press Start 2P', monospace" },
-      { name: "Silkscreen", value: "var(--font-silkscreen), 'Silkscreen', sans-serif" },
-      { name: "Utara", value: "Utara, sans-serif" },
-      { name: "Beast", value: "Beast, sans-serif" },
-      { name: "FT88", value: "FT88, monospace" },
+      { name: "Silkscreen", value: "var(--font-silkscreen), sans-serif" },
+      { name: "Honk", value: "var(--font-honk), sans-serif" },
     ],
   },
   {
     name: "Experimental",
     fonts: [
       { name: "Lucida Console", value: "Lucida Console, Monaco, monospace" },
-      { name: "Alpha Lyrae", value: "Alpha Lyrae, sans-serif" },
-      { name: "Barlow Fold", value: "Barlow Fold, sans-serif" },
-      { name: "Ark ES", value: "Ark ES, sans-serif" },
+      { name: "Orbitron", value: "var(--font-orbitron), 'Orbitron', sans-serif" },
+      { name: "Audiowide", value: "var(--font-audiowide), 'Audiowide', sans-serif" },
+      { name: "Bruno Ace", value: "var(--font-bruno-ace), 'Bruno Ace', sans-serif" },
+      { name: "Bruno Ace SC", value: "var(--font-bruno-ace-sc), 'Bruno Ace SC', sans-serif" },
     ],
   },
 ]
