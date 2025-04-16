@@ -16,12 +16,14 @@ import { SidebarTrigger } from "@/components/ui/sidebar"
 import { ThemeToggle } from "./theme-toggle"
 import { getProfessionalPortraitAvatar } from "@/utils/avatar"
 import { MinecraftSearchIcon, MinecraftBellIcon } from "@/components/icons/minecraft"
+import { MinecraftAvatar } from "./minecraft-avatar"
 
 interface DashboardHeaderProps {
   heroVariant?: 1 | 2 | 3
+  pixelationLevel?: number
 }
 
-export function DashboardHeader({ heroVariant = 1 }: DashboardHeaderProps) {
+export function DashboardHeader({ heroVariant = 1, pixelationLevel = 3 }: DashboardHeaderProps) {
   // Determine which icons to use based on heroVariant
   const SearchIconComponent = heroVariant === 2 ? MinecraftSearchIcon : Search
   const BellIconComponent = heroVariant === 2 ? MinecraftBellIcon : Bell
@@ -69,10 +71,20 @@ export function DashboardHeader({ heroVariant = 1 }: DashboardHeaderProps) {
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="ghost" className="relative h-7 w-7 rounded-full overflow-hidden p-0">
-              <Avatar className="h-7 w-7">
-                <AvatarImage src={getProfessionalPortraitAvatar() || "/placeholder.svg"} alt="User" />
-                <AvatarFallback className="hidden">JD</AvatarFallback>
-              </Avatar>
+              {heroVariant === 2 ? (
+                <MinecraftAvatar
+                  src={getProfessionalPortraitAvatar() || "/placeholder.svg"}
+                  alt="User"
+                  fallback="JD"
+                  size={7}
+                  pixelSize={pixelationLevel}
+                />
+              ) : (
+                <Avatar className="h-7 w-7">
+                  <AvatarImage src={getProfessionalPortraitAvatar() || "/placeholder.svg"} alt="User" />
+                  <AvatarFallback className="hidden">JD</AvatarFallback>
+                </Avatar>
+              )}
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">

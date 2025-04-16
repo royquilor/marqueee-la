@@ -361,6 +361,23 @@
   .animate-marquee {
     animation-name: marquee;
   }
+
+  /* Floating star animation for Minecraft theme */
+  @keyframes float-star {
+    0%,
+    100% {
+      transform: translateY(0) translateX(0);
+    }
+    25% {
+      transform: translateY(-10px) translateX(5px);
+    }
+    50% {
+      transform: translateY(5px) translateX(-5px);
+    }
+    75% {
+      transform: translateY(10px) translateX(3px);
+    }
+  }
 }
 
 @font-face {
@@ -523,4 +540,9 @@
 
 .star-wars-scroll {
   animation: star-wars-scroll 20s linear infinite;
+}
+
+/* Minecraft night sky gradient */
+.minecraft-night-sky {
+  background: linear-gradient(to bottom, #0c0c1d 0%, #1a1a40 50%, #3d2c14 100%);
 }

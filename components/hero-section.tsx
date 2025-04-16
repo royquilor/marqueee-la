@@ -1,11 +1,13 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import Dashboard from "./dashboard"
 import { DynamicIslandMenu, type ThemeSettings } from "./dynamic-island-menu"
 import { MarqueeHeading } from "./marquee-heading"
 import { EmailSubscriptionForm } from "./email-subscription-form"
+import { MinecraftStarsBackground } from "./minecraft-stars-background"
+import { ThemeLoader } from "./theme-loader"
 
 // Define system font stacks
 const SYSTEM_HEADING_FONT =
@@ -44,6 +46,11 @@ const themeVariants = {
 export function HeroSection() {
   const [heroVariant, setHeroVariant] = useState<1 | 2 | 3>(1)
   const [direction, setDirection] = useState<1 | -1>(1) // 1 for right, -1 for left
+  const [isLoading, setIsLoading] = useState(false)
+  const [targetVariant, setTargetVariant] = useState<1 | 2 | 3 | null>(null)
+  const [progress, setProgress] = useState(0)
+  const [contentVisible, setContentVisible] = useState(true)
+  const progressInterval = useRef<NodeJS.Timeout | null>(null)
   const [themeSettings, setThemeSettings] = useState<ThemeSettings>({
     headingFont: SYSTEM_HEADING_FONT,
     textFont: SYSTEM_TEXT_FONT,
@@ -67,37 +74,108 @@ export function HeroSection() {
     }
   }, [])
 
+  // Clean up interval on unmount
+  useEffect(() => {
+    return () => {
+      if (progressInterval.current) {
+        clearInterval(progressInterval.current)
+      }
+    }
+  }, [])
+
+  // Handle theme change with loading state
+  const changeThemeWithLoading = (newVariant: 1 | 2 | 3) => {
+    // Only show loader for variants 2 and 3
+    if ((newVariant === 2 || newVariant === 3) && heroVariant !== newVariant) {
+      // First hide the current content
+      setContentVisible(false)
+
+      // After content is hidden, show the loader
+      setTimeout(() => {
+        setIsLoading(true)
+        setTargetVariant(newVariant)
+        setProgress(0)
+
+        // Start progress animation
+        let currentProgress = 0
+        progressInterval.current = setInterval(() => {
+          currentProgress += 2
+          if (currentProgress > 100) {
+            if (progressInterval.current) {
+              clearInterval(progressInterval.current)
+            }
+            return
+          }
+          setProgress(currentProgress)
+        }, 30)
+
+        // Apply the theme after a delay
+        setTimeout(() => {
+          setHeroVariant(newVariant)
+
+          // Apply the corresponding theme
+          const themeKey = `variant${newVariant}` as keyof typeof themeVariants
+          handleThemeSettings({
+            ...themeVariants[themeKey],
+            theme: themeSettings.theme, // Preserve current theme mode
+          })
+
+          // After theme is applied, hide loader and show content
+          setTimeout(() => {
+            setIsLoading(false)
+            setTargetVariant(null)
+            if (progressInterval.current) {
+              clearInterval(progressInterval.current)
+            }
+
+            // Show content after loader is gone
+            setTimeout(() => {
+              setContentVisible(true)
+            }, 300)
+          }, 500)
+        }, 1500)
+      }, 300)
+    } else {
+      // For variant 1, just switch immediately with a quick fade
+      setContentVisible(false)
+
+      setTimeout(() => {
+        setHeroVariant(newVariant)
+
+        // Apply the corresponding theme
+        const themeKey = `variant${newVariant}` as keyof typeof themeVariants
+        handleThemeSettings({
+          ...themeVariants[themeKey],
+          theme: themeSettings.theme, // Preserve current theme mode
+        })
+
+        setTimeout(() => {
+          setContentVisible(true)
+        }, 300)
+      }, 300)
+    }
+  }
+
   // Add keyboard event listener for arrow keys
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
+      // Don't process key events during loading
+      if (isLoading || !contentVisible) return
+
       if (e.key === "ArrowRight") {
         setDirection(1)
         const newVariant = heroVariant === 3 ? 1 : ((heroVariant + 1) as 1 | 2 | 3)
-        setHeroVariant(newVariant)
-
-        // Apply the corresponding theme
-        const themeKey = `variant${newVariant}` as keyof typeof themeVariants
-        handleThemeSettings({
-          ...themeVariants[themeKey],
-          theme: themeSettings.theme, // Preserve current theme mode
-        })
+        changeThemeWithLoading(newVariant)
       } else if (e.key === "ArrowLeft") {
         setDirection(-1)
         const newVariant = heroVariant === 1 ? 3 : ((heroVariant - 1) as 1 | 2 | 3)
-        setHeroVariant(newVariant)
-
-        // Apply the corresponding theme
-        const themeKey = `variant${newVariant}` as keyof typeof themeVariants
-        handleThemeSettings({
-          ...themeVariants[themeKey],
-          theme: themeSettings.theme, // Preserve current theme mode
-        })
+        changeThemeWithLoading(newVariant)
       }
     }
 
     window.addEventListener("keydown", handleKeyDown)
     return () => window.removeEventListener("keydown", handleKeyDown)
-  }, [heroVariant, themeSettings.theme])
+  }, [heroVariant, themeSettings.theme, isLoading, contentVisible])
 
   const handleThemeSettings = (newSettings: ThemeSettings) => {
     setThemeSettings(newSettings)
@@ -198,7 +276,7 @@ export function HeroSection() {
   const renderHeroVariant = () => {
     return (
       <AnimatePresence mode="wait" custom={direction}>
-        {heroVariant === 1 && (
+        {heroVariant === 1 && contentVisible && (
           <motion.div
             key="variant-1"
             className="w-full relative z-5"
@@ -233,7 +311,7 @@ export function HeroSection() {
           </motion.div>
         )}
 
-        {heroVariant === 2 && (
+        {heroVariant === 2 && contentVisible && (
           <motion.div
             key="variant-2"
             className="w-full relative z-5"
@@ -247,6 +325,9 @@ export function HeroSection() {
               opacity: { duration: 0.5 },
             }}
           >
+            {/* Add the stars background for variant 2 */}
+            <MinecraftStarsBackground starCount={40} starColor="#ffdd00" />
+
             <div className="py-20 text-center lg:py-40 w-full minecraft-theme">
               {/* Star Wars style 3D perspective container */}
               <div className="star-wars-container mx-auto max-w-3xl perspective-500 overflow-hidden">
@@ -278,7 +359,7 @@ export function HeroSection() {
           </motion.div>
         )}
 
-        {heroVariant === 3 && (
+        {heroVariant === 3 && contentVisible && (
           <motion.div
             key="variant-3"
             className="w-full relative z-5 px-4 sm:px-6 lg:px-8"
@@ -319,13 +400,31 @@ export function HeroSection() {
 
   return (
     <div className="relative overflow-hidden bg-background">
-      {/* Removed variant indicator */}
+      {/* Loading overlay */}
+      <AnimatePresence>
+        {isLoading && targetVariant && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.3 }}
+            className="fixed inset-0 z-[100]"
+          >
+            <ThemeLoader variant={targetVariant} progress={progress} />
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* Gradient background - positioned absolutely to cover the bottom half */}
       <div
-        className="absolute bottom-0 left-0 right-0 h-[800px] pointer-events-none"
+        className={`absolute bottom-0 left-0 right-0 h-[800px] pointer-events-none ${
+          heroVariant === 2 ? "minecraft-night-sky" : ""
+        }`}
         style={{
-          background: `linear-gradient(to top, hsl(var(--primary) / 0.6) 0%, hsl(var(--primary) / 0.2) 40%, transparent 100%)`,
+          background:
+            heroVariant !== 2
+              ? `linear-gradient(to top, hsl(var(--primary) / 0.6) 0%, hsl(var(--primary) / 0.2) 40%, transparent 100%)`
+              : undefined,
           zIndex: 0,
         }}
         aria-hidden="true"

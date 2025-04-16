@@ -26,6 +26,7 @@ import {
   useReactTable,
 } from "@tanstack/react-table"
 import { MinecraftCompletedIcon, MinecraftInProgressIcon, MinecraftTodoIcon } from "@/components/icons/minecraft"
+import { MinecraftAvatar } from "./minecraft-avatar"
 
 // Task type definition
 type Task = {
@@ -192,12 +193,15 @@ const tasks: Task[] = [
   },
 ]
 
+// Update the TaskListProps interface
 interface TaskListProps {
   className?: string
   heroVariant?: 1 | 2 | 3
+  pixelationLevel?: number // Add this line
 }
 
-export function TaskList({ className, heroVariant = 1 }: TaskListProps) {
+// Update the TaskList function to include the pixelationLevel prop
+export function TaskList({ className, heroVariant = 1, pixelationLevel = 3 }: TaskListProps) {
   const [sorting, setSorting] = React.useState<SortingState>([])
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([])
   const [rowSelection, setRowSelection] = React.useState({})
@@ -294,6 +298,20 @@ export function TaskList({ className, heroVariant = 1 }: TaskListProps) {
       header: "Assignee",
       cell: ({ row }) => {
         const assignee = row.getValue("assignee") as Task["assignee"]
+
+        // Use MinecraftAvatar for heroVariant 2, regular Avatar for others
+        if (heroVariant === 2) {
+          return (
+            <MinecraftAvatar
+              src={assignee.avatar || "/placeholder.svg"}
+              alt={assignee.name}
+              fallback={assignee.initials}
+              size={6}
+              pixelSize={pixelationLevel} // Use the pixelationLevel prop
+            />
+          )
+        }
+
         return (
           <Avatar className="h-6 w-6">
             <AvatarImage src={assignee.avatar || "/placeholder.svg"} alt={assignee.name} />

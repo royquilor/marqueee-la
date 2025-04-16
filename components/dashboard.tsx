@@ -9,9 +9,10 @@ import { SidebarProvider } from "@/components/ui/sidebar"
 
 interface DashboardProps {
   heroVariant?: 1 | 2 | 3
+  pixelationLevel?: number // Add this line
 }
 
-export default function Dashboard({ heroVariant = 1 }: DashboardProps) {
+export default function Dashboard({ heroVariant = 1, pixelationLevel = 3 }: DashboardProps) {
   const [selectedView, setSelectedView] = useState<"tasks" | "projects" | "team" | "analytics">("tasks")
   const [activeComponent, setActiveComponent] = useState<string | null>(null)
   const sidebarRef = useRef<HTMLDivElement>(null)
@@ -58,7 +59,7 @@ export default function Dashboard({ heroVariant = 1 }: DashboardProps) {
             {selectedView === "tasks" && (
               <div className="flex h-full flex-col">
                 <ProjectOverview />
-                <TaskList className="flex-1" heroVariant={heroVariant} />
+                <TaskList className="flex-1" heroVariant={heroVariant} pixelationLevel={pixelationLevel} />
               </div>
             )}
             {selectedView === "projects" && (
@@ -160,7 +161,7 @@ export default function Dashboard({ heroVariant = 1 }: DashboardProps) {
           heroVariant={heroVariant}
         />
         <div className="flex flex-1 flex-col overflow-hidden border-l border-border dark:border-border/90">
-          <DashboardHeader heroVariant={heroVariant} />
+          <DashboardHeader heroVariant={heroVariant} pixelationLevel={pixelationLevel} />
           <main className="flex-1 overflow-auto p-0">{renderDashboardContent()}</main>
         </div>
       </div>
