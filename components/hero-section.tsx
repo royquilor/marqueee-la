@@ -266,7 +266,7 @@ export function HeroSection() {
             <div className="py-20 text-center lg:py-40 w-full">
               <h1 className="animate-fade-in text-4xl font-medium tracking-tighter text-foreground sm:text-6xl md:text-9xl w-full m-0 p-0">
                 <MarqueeHeading
-                  text="Just Marqueee it. Look Different Fast. CMD + R. Export Code soon."
+                  text="Just Marqueee it. Look Different Fast. CMD + R. Export Code Soon."
                   className="leading-none w-full"
                   speed={15}
                   gap={100}
@@ -274,7 +274,7 @@ export function HeroSection() {
                 />
               </h1>
               <p className="animate-fade-in-delay-1 mx-auto mt-4 max-w-2xl text-xl text-balance text-muted-foreground px-4">
-                Try different design themes fast. Built on Shadcn/UI. Hit the right arrow key, or press CMD + R.
+                Try different design themes fast. Built on Shadcn/UI. Hit the right arrow key, or press CMD + R. Export Code Soon.
               </p>
               <div className="animate-fade-in-delay-2">
                 <EmailSubscriptionForm />
@@ -352,7 +352,7 @@ export function HeroSection() {
               transition={{ delay: 0.5, duration: 0.7 }}
               style={{ fontFamily: "var(--tron-heading-font)" }}
             >
-              Try different design themes fast. Built on Shadcn/UI. Hit the right arrow key, or press CMD + R.
+              Built on Shadcn/UI. Hit the right arrow key, or press CMD + R. Export Code Soon.
             </motion.p>
 
             <motion.div
