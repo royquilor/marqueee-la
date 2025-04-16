@@ -2,91 +2,69 @@
 
 import type React from "react"
 
-import { createContext, useContext, useEffect } from "react"
-import { ThemeProvider as NextThemesProvider } from "next-themes"
-import type { Theme } from "@/lib/types"
+import { createContext, useContext, useEffect, useState } from "react"
+
+type Theme = "dark" | "light" | "system"
 
 type ThemeProviderProps = {
   children: React.ReactNode
-  theme: Theme
+  defaultTheme?: Theme
+  storageKey?: string
 }
 
-const ThemeContext = createContext<Theme | undefined>(undefined)
+type ThemeProviderState = {
+  theme: Theme
+  setTheme: (theme: Theme) => void
+}
 
-export function ThemeProvider({ children, theme }: ThemeProviderProps) {
-  // Update CSS variables whenever theme changes
+const initialState: ThemeProviderState = {
+  theme: "system",
+  setTheme: () => null,
+}
+
+const ThemeProviderContext = createContext<ThemeProviderState>(initialState)
+
+export function ThemeProvider({
+  children,
+  defaultTheme = "dark", // Set dark as the default
+  storageKey = "ui-theme",
+  ...props
+}: ThemeProviderProps) {
+  const [theme, setTheme] = useState<Theme>(() => (localStorage.getItem(storageKey) as Theme) || defaultTheme)
+
   useEffect(() => {
-    document.documentElement.style.setProperty("--primary", theme.colors.primary)
-    document.documentElement.style.setProperty("--secondary", theme.colors.secondary)
+    const root = window.document.documentElement
+    root.classList.remove("light", "dark")
 
-    // Update Tailwind CSS variables to match our theme
-    document.documentElement.style.setProperty("--primary-rgb", hexToRgb(theme.colors.primary))
+    if (theme === "system") {
+      const systemTheme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light"
 
-    // Update the border radius CSS variable
-    document.documentElement.style.setProperty("--radius", `${theme.borderRadius}px`)
-
-    // Update the container width CSS variable
-    document.documentElement.style.setProperty("--container-width", theme.containerWidth)
-
-    // Force update of button styles by updating the CSS variable
-    document.documentElement.style.setProperty("--ring", theme.colors.primary)
-
-    // Add custom CSS for heading and body fonts
-    const styleEl = document.createElement("style")
-    styleEl.textContent = `
-      h1, h2, h3, h4, h5, h6 {
-        font-family: ${theme.headingFont};
-      }
-      body, p, div, span, button, input, select, textarea {
-        font-family: ${theme.bodyFont};
-      }
-    `
-
-    // Remove any previous custom font styles
-    const prevStyle = document.getElementById("custom-font-styles")
-    if (prevStyle) {
-      prevStyle.remove()
+      root.classList.add(systemTheme)
+      return
     }
 
-    // Add the new styles
-    styleEl.id = "custom-font-styles"
-    document.head.appendChild(styleEl)
+    root.classList.add(theme)
   }, [theme])
 
-  // Helper function to convert hex to RGB format
-  function hexToRgb(hex: string) {
-    // Remove the # if present
-    hex = hex.replace("#", "")
-
-    // Parse the hex values
-    const r = Number.parseInt(hex.substring(0, 2), 16)
-    const g = Number.parseInt(hex.substring(2, 4), 16)
-    const b = Number.parseInt(hex.substring(4, 6), 16)
-
-    return `${r} ${g} ${b}`
+  const value = {
+    theme,
+    setTheme: (theme: Theme) => {
+      localStorage.setItem(storageKey, theme)
+      setTheme(theme)
+    },
   }
 
   return (
-    <ThemeContext.Provider value={theme}>
-      <NextThemesProvider attribute="class" defaultTheme="dark" enableSystem={false}>
-        <div
-          style={
-            {
-              "--container-width": theme.containerWidth,
-            } as React.CSSProperties
-          }
-        >
-          {children}
-        </div>
-      </NextThemesProvider>
-    </ThemeContext.Provider>
+    <ThemeProviderContext.Provider {...props} value={value}>
+      {children}
+    </ThemeProviderContext.Provider>
   )
 }
 
 export const useTheme = () => {
-  const context = useContext(ThemeContext)
-  if (context === undefined) {
-    throw new Error("useTheme must be used within a ThemeProvider")
-  }
+  const context = useContext(ThemeProviderContext)
+
+  if (context === undefined) throw new Error("useTheme must be used within a ThemeProvider")
+
   return context
 }

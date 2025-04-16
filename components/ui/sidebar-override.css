@@ -1,0 +1,23 @@
+.dark [data-sidebar="sidebar"] {
+  border: none !important;
+}
+
+.dark [data-sidebar="rail"]::after {
+  background-color: transparent !important;
+}
+
+.dark [data-sidebar="menu-sub"] {
+  border-color: hsl(var(--border)) !important;
+}
+
+.dark [data-sidebar="separator"] {
+  background-color: hsl(var(--border)) !important;
+}
+
+[data-sidebar="sidebar"] {
+  border: none !important;
+}
+
+[data-sidebar="rail"]::after {
+  background-color: transparent !important;
+}

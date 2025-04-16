@@ -4,52 +4,74 @@
 
 @layer base {
   :root {
+    /* Default color values */
+    --primary-hue: 215;
+    --primary-saturation: 83%;
+
     --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    --foreground: 240 10% 3.9%;
     --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    --card-foreground: 240 10% 3.9%;
     --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
-    --primary-rgb: 37 99 235;
-    --primary: #3b82f6;
-    --primary-foreground: 210 40% 98%;
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    --popover-foreground: 240 10% 3.9%;
+    --primary: var(--primary-hue) var(--primary-saturation) 40%;
+    --primary-foreground: var(--primary-hue) var(--primary-saturation) 95%;
+    --secondary: 240 4.8% 95.9%;
+    --secondary-foreground: 240 5.9% 10%;
+    --muted: 240 4.8% 95.9%;
+    --muted-foreground: 240 3.8% 46.1%;
+    --accent: 240 4.8% 95.9%;
+    --accent-foreground: 240 5.9% 10%;
     --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: var(--primary);
+    --destructive-foreground: 0 0% 98%;
+    --border: 240 5.9% 90%;
+    --input: 240 5.9% 90%;
+    --ring: 240 5.9% 10%;
     --radius: 0.5rem;
-    --container-width: 1280px;
+    --heading-font-family: "Inter", sans-serif;
+    --text-font-family: "Inter", sans-serif;
+
+    /* Sidebar variables */
+    --sidebar-background: 0 0% 100%;
+    --sidebar-foreground: 240 10% 3.9%;
+    --sidebar-primary: 240 5.9% 10%;
+    --sidebar-primary-foreground: 0 0% 98%;
+    --sidebar-accent: 240 4.8% 95.9%;
+    --sidebar-accent-foreground: 240 5.9% 10%;
+    --sidebar-border: 240 5.9% 90%;
+    --sidebar-ring: 240 5.9% 10%;
   }
 
   .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
-    --primary-rgb: 37 99 235;
-    --primary: #3b82f6;
-    --primary-foreground: 222.2 47.4% 11.2%;
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
+    --background: 240 10% 3.9%;
+    --foreground: 0 0% 98%;
+    --card: 240 10% 3.9%;
+    --card-foreground: 0 0% 98%;
+    --popover: 240 10% 3.9%;
+    --popover-foreground: 0 0% 98%;
+    --primary: var(--primary-hue) var(--primary-saturation) 50%;
+    --primary-foreground: var(--primary-hue) var(--primary-saturation) 95%;
+    --secondary: 240 3.7% 15.9%;
+    --secondary-foreground: 0 0% 98%;
+    --muted: 240 3.7% 15.9%;
+    --muted-foreground: 240 5% 64.9%;
+    --accent: 240 3.7% 15.9%;
+    --accent-foreground: 0 0% 98%;
     --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: var(--primary);
-    --container-width: 1280px;
+    --destructive-foreground: 0 0% 98%;
+    --border: 240 3.7% 25%; /* Updated: increased lightness for better visibility */
+    --input: 240 3.7% 25%; /* Updated: increased lightness for better visibility */
+    --ring: 240 4.9% 83.9%;
+
+    /* Sidebar variables */
+    --sidebar-background: 240 10% 3.9%;
+    --sidebar-foreground: 0 0% 98%;
+    --sidebar-primary: 0 0% 98%;
+    --sidebar-primary-foreground: 240 5.9% 10%;
+    --sidebar-accent: 240 3.7% 15.9%;
+    --sidebar-accent-foreground: 0 0% 98%;
+    --sidebar-border: 240 3.7% 25%; /* Updated: increased lightness for better visibility */
+    --sidebar-ring: 240 4.9% 83.9%;
   }
 }
 
@@ -61,47 +83,247 @@
     @apply bg-background text-foreground;
   }
 
-  /* Enhance focus styles for better keyboard navigation */
-  :focus-visible {
-    @apply outline-none ring-2 ring-primary ring-offset-2;
+  /* Apply different fonts to different elements */
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: var(--heading-font-family) !important;
+  }
+
+  /* Target spans inside headings specifically */
+  h1 span,
+  h2 span,
+  h3 span,
+  h4 span,
+  h5 span,
+  h6 span {
+    font-family: var(--heading-font-family) !important;
+  }
+
+  p,
+  div,
+  button,
+  input,
+  textarea,
+  label,
+  a {
+    font-family: var(--text-font-family);
+  }
+
+  /* Spans that are not inside headings should use text font */
+  span:not(h1 span):not(h2 span):not(h3 span):not(h4 span):not(h5 span):not(h6 span) {
+    font-family: var(--text-font-family);
   }
 }
 
-/* Utility class to disable all transitions */
-.transition-none,
-.transition-none * {
-  transition: none !important;
-  animation: none !important;
+/* Full radius only for specific elements */
+.radius-full button,
+.radius-full .btn,
+.radius-full [role="button"] {
+  border-radius: 9999px !important;
 }
 
-/* Custom button styles to use the theme primary color */
-.btn-primary {
-  background-color: var(--primary) !important;
-  color: white !important;
+.radius-full .badge,
+.radius-full [data-badge] {
+  border-radius: 9999px !important;
 }
 
-/* Update shadcn button styles to use our theme variables */
-@layer components {
-  .button-primary {
-    background-color: var(--primary) !important;
-    color: white !important;
+.radius-full .avatar,
+.radius-full [role="img"] {
+  border-radius: 9999px !important;
+}
+
+/* Spacing variations */
+.spacing-compact {
+  --spacing-multiplier: 0.75;
+}
+
+.spacing-default {
+  --spacing-multiplier: 1;
+}
+
+.spacing-comfortable {
+  --spacing-multiplier: 1.25;
+}
+
+/* Apply spacing multiplier to common spacing classes */
+.spacing-compact .p-1 {
+  padding: 0.25rem * var(--spacing-multiplier);
+}
+.spacing-compact .p-2 {
+  padding: 0.5rem * var(--spacing-multiplier);
+}
+.spacing-compact .p-3 {
+  padding: 0.75rem * var(--spacing-multiplier);
+}
+.spacing-compact .p-4 {
+  padding: 1rem * var(--spacing-multiplier);
+}
+.spacing-compact .gap-1 {
+  gap: 0.25rem * var(--spacing-multiplier);
+}
+.spacing-compact .gap-2 {
+  gap: 0.5rem * var(--spacing-multiplier);
+}
+.spacing-compact .gap-3 {
+  gap: 0.75rem * var(--spacing-multiplier);
+}
+.spacing-compact .gap-4 {
+  gap: 1rem * var(--spacing-multiplier);
+}
+
+/* Table specific spacing */
+.spacing-compact th {
+  padding-top: 0.5rem * var(--spacing-multiplier);
+  padding-bottom: 0.5rem * var(--spacing-multiplier);
+  padding-left: 0.75rem * var(--spacing-multiplier);
+  padding-right: 0.75rem * var(--spacing-multiplier);
+}
+
+.spacing-compact td {
+  padding-top: 0.75rem * var(--spacing-multiplier);
+  padding-bottom: 0.75rem * var(--spacing-multiplier);
+  padding-left: 0.75rem * var(--spacing-multiplier);
+  padding-right: 0.75rem * var(--spacing-multiplier);
+}
+
+.spacing-comfortable th {
+  padding-top: 0.5rem * var(--spacing-multiplier);
+  padding-bottom: 0.5rem * var(--spacing-multiplier);
+  padding-left: 0.75rem * var(--spacing-multiplier);
+  padding-right: 0.75rem * var(--spacing-multiplier);
+}
+
+.spacing-comfortable td {
+  padding-top: 0.75rem * var(--spacing-multiplier);
+  padding-bottom: 0.75rem * var(--spacing-multiplier);
+  padding-left: 0.75rem * var(--spacing-multiplier);
+  padding-right: 0.75rem * var(--spacing-multiplier);
+}
+
+.spacing-comfortable .p-1 {
+  padding: 0.25rem * var(--spacing-multiplier);
+}
+.spacing-comfortable .p-2 {
+  padding: 0.5rem * var(--spacing-multiplier);
+}
+.spacing-comfortable .p-3 {
+  padding: 0.75rem * var(--spacing-multiplier);
+}
+.spacing-comfortable .p-4 {
+  padding: 1rem * var(--spacing-multiplier);
+}
+.spacing-comfortable .gap-1 {
+  gap: 0.25rem * var(--spacing-multiplier);
+}
+.spacing-comfortable .gap-2 {
+  gap: 0.5rem * var(--spacing-multiplier);
+}
+.spacing-comfortable .gap-3 {
+  gap: 0.75rem * var(--spacing-multiplier);
+}
+.spacing-comfortable .gap-4 {
+  gap: 1rem * var(--spacing-multiplier);
+}
+
+/* Override any white borders in dark mode */
+@layer utilities {
+  .dark .border {
+    @apply border-border;
   }
 
-  /* Override container class to use the theme's container width */
-  .container {
-    max-width: var(--container-width) !important;
+  .dark [data-sidebar="sidebar"] {
+    @apply border-border;
   }
-}
 
-/* Enhanced focus styles for keyboard navigation */
-.focus-visible-ring {
-  @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2;
-}
+  .dark [data-radix-popper-content-wrapper] * {
+    @apply border-border;
+  }
 
-/* Prevent layout shifts */
-html,
-body {
-  overflow-x: hidden;
-  position: relative;
-  height: 100%;
+  .dark .border-white {
+    @apply border-border;
+  }
+
+  /* Hero animations */
+  .animate-fade-in {
+    animation: fadeIn 0.8s ease-out forwards;
+  }
+
+  .animate-fade-in-delay-1 {
+    opacity: 0;
+    animation: fadeIn 0.8s ease-out 0.3s forwards;
+  }
+
+  .animate-fade-in-delay-2 {
+    opacity: 0;
+    animation: fadeIn 0.8s ease-out 0.6s forwards;
+  }
+
+  .animate-fade-in-up {
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeInUp 1s ease-out 0.8s forwards;
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* Hide scrollbar for Chrome, Safari and Opera */
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Hide scrollbar for IE, Edge and Firefox */
+  .scrollbar-hide {
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+  }
+
+  /* Two-line heading */
+  .two-line-heading span {
+    display: block;
+    width: 100%;
+  }
+
+  .two-line-heading span:first-child {
+    margin-bottom: 0.1em;
+  }
+
+  .two-line-heading span:last-child {
+    margin-top: 0.1em;
+  }
+
+  /* Marquee animation */
+  @keyframes marquee {
+    0% {
+      transform: translateX(0);
+    }
+    100% {
+      transform: translateX(-100%);
+    }
+  }
+
+  .animate-marquee {
+    animation-name: marquee;
+  }
 }
