@@ -199,6 +199,18 @@ export function EmailSubscriptionForm({ className, theme }: EmailSubscriptionFor
     return () => document.removeEventListener("mousemove", handleMouseMove)
   }, [])
 
+  // Add this near the top of the component, after the other useEffect hooks
+  useEffect(() => {
+    // Check if there's any stored submission state and clear it
+    const storedSubmission = localStorage.getItem("emailSubmitted")
+    if (storedSubmission) {
+      // For debugging only - remove this in production
+      console.log("Found stored submission state, clearing it")
+      localStorage.removeItem("emailSubmitted")
+      setIsSubmitted(false)
+    }
+  }, [])
+
   // Email validation function (client-side)
   const validateEmail = (email: string) => {
     const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
@@ -238,6 +250,9 @@ export function EmailSubscriptionForm({ className, theme }: EmailSubscriptionFor
         setIsSubmitted(true)
         setSuccessMessage(result.message)
         setEmail("") // Clear the input
+
+        // Remove any code that might be storing the submission state in localStorage
+        // If there's no such code, we need to look elsewhere for the issue
       } else {
         setHasError(true)
         setErrorMessage(result.message)
@@ -355,7 +370,7 @@ export function EmailSubscriptionForm({ className, theme }: EmailSubscriptionFor
             transition={{ duration: 0.3 }}
             key={isSubmitted ? "success" : "default"}
           >
-            {isSubmitted ? successMessage : "Thank you for joining!"}
+            {isSubmitted ? successMessage : "Join our waitlist for early access"}
           </motion.p>
         </form>
       </div>

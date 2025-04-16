@@ -122,6 +122,10 @@ const honk = Honk({
 export const metadata: Metadata = {
   title: "Marqueee.dev - Try different designs fast",
   description: "Explore different design themes, hit the right arrow key, hit CMD + R.",
+  // Add cache control directives
+  other: {
+    "Cache-Control": "no-store, max-age=0",
+  },
   openGraph: {
     title: "Marqueee.dev - Try different designs fast",
     description: "Explore different design themes, hit the right arrow key, hit CMD + R.",
