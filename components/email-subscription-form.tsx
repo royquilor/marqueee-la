@@ -3,7 +3,7 @@
 import type React from "react"
 import { useState, useRef, useEffect, createContext, useContext } from "react"
 import { Input } from "@/components/ui/input"
-import { Check, Loader2 } from "lucide-react"
+import { Check, Loader2, Info } from "lucide-react"
 import { cn } from "@/utils/utils"
 import { motion, AnimatePresence } from "framer-motion"
 import { subscribeToNewsletter, type SubscribeFormData } from "@/actions/subscribe"
@@ -17,11 +17,14 @@ interface EmailSubscriptionFormProps {
 const FormContext = createContext<{ theme?: string } | null>(null)
 
 // Form submit button with loading state
-function SubscribeButton({ isSubmitted }: { isSubmitted: boolean }) {
+function SubscribeButton({ isSubmitted, isAlreadySubscribed }: { isSubmitted: boolean; isAlreadySubscribed: boolean }) {
   const { pending } = useFormStatus()
   const formContext = useContext(FormContext)
   const isMinecraft = formContext?.theme === "minecraft"
   const isTron = formContext?.theme === "tron"
+
+  // Determine which icon to show based on subscription status
+  const SuccessIcon = isAlreadySubscribed ? Info : Check
 
   if (isMinecraft) {
     return (
@@ -63,7 +66,7 @@ function SubscribeButton({ isSubmitted }: { isSubmitted: boolean }) {
               delay: 0.1,
             }}
           >
-            <Check className="h-5 w-5" />
+            <SuccessIcon className="h-5 w-5" />
           </motion.div>
         ) : (
           "Join"
@@ -109,7 +112,7 @@ function SubscribeButton({ isSubmitted }: { isSubmitted: boolean }) {
               delay: 0.1,
             }}
           >
-            <Check className="h-5 w-5" />
+            <SuccessIcon className="h-5 w-5" />
           </motion.div>
         ) : (
           "Join"
@@ -163,7 +166,7 @@ function SubscribeButton({ isSubmitted }: { isSubmitted: boolean }) {
             delay: 0.1,
           }}
         >
-          <Check className="h-5 w-5" />
+          <SuccessIcon className="h-5 w-5" />
         </motion.div>
       ) : (
         "Join the Waitlist"
@@ -178,6 +181,7 @@ export function EmailSubscriptionForm({ className, theme }: EmailSubscriptionFor
   const [errorMessage, setErrorMessage] = useState("")
   const [isSubmitted, setIsSubmitted] = useState(false)
   const [successMessage, setSuccessMessage] = useState("Thanks for subscribing!")
+  const [isAlreadySubscribed, setIsAlreadySubscribed] = useState(false)
   const inputRef = useRef<HTMLInputElement>(null)
   const formRef = useRef<HTMLFormElement>(null)
 
@@ -249,10 +253,17 @@ export function EmailSubscriptionForm({ className, theme }: EmailSubscriptionFor
       if (result.success) {
         setIsSubmitted(true)
         setSuccessMessage(result.message)
-        setEmail("") // Clear the input
 
-        // Remove any code that might be storing the submission state in localStorage
-        // If there's no such code, we need to look elsewhere for the issue
+        // Check if the message indicates the user is already subscribed
+        if (result.message.includes("already subscribed")) {
+          setIsAlreadySubscribed(true)
+          // Keep the email in the field for already subscribed users
+          // This makes it clearer which email is already registered
+        } else {
+          setIsAlreadySubscribed(false)
+          // Clear the input for new subscriptions
+          setEmail("")
+        }
       } else {
         setHasError(true)
         setErrorMessage(result.message)
@@ -360,12 +371,16 @@ export function EmailSubscriptionForm({ className, theme }: EmailSubscriptionFor
                 layout: { type: "spring", stiffness: 300, damping: 25 },
               }}
             >
-              <SubscribeButton isSubmitted={isSubmitted} />
+              <SubscribeButton isSubmitted={isSubmitted} isAlreadySubscribed={isAlreadySubscribed} />
             </motion.div>
           </motion.div>
 
           <motion.p
-            className={cn("text-sm text-muted-foreground mt-2", theme === "tron" ? "text-left" : "text-center")}
+            className={cn(
+              "text-sm mt-2",
+              isAlreadySubscribed ? "text-amber-500 dark:text-amber-400" : "text-muted-foreground",
+              theme === "tron" ? "text-left" : "text-center",
+            )}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.3 }}
             key={isSubmitted ? "success" : "default"}
