@@ -82,7 +82,6 @@ const themeOptions = [
   { name: "dark", label: "Dark", icon: Moon },
   { name: "system", label: "Auto" },
 ]
-const spacingOptions = ["Compact", "Default", "Comfortable"]
 const radiusOptions = ["None", "Small", "Default", "Large", "Full"]
 
 // MARQUEEE letters for the animation
@@ -96,7 +95,6 @@ export interface ThemeSettings {
   headingFont: string
   textFont: string
   color: string
-  spacing: string
   radius: string
   theme: "light" | "dark" | "system"
 }
@@ -114,7 +112,6 @@ export function DynamicIslandMenu({ onThemeChange }: DynamicIslandMenuProps) {
     headingFont: DEFAULT_HEADING_FONT,
     textFont: DEFAULT_TEXT_FONT,
     color: "blue-600",
-    spacing: "Default",
     radius: "Default",
     theme: theme as "light" | "dark" | "system",
   })
@@ -288,7 +285,6 @@ export function DynamicIslandMenu({ onThemeChange }: DynamicIslandMenuProps) {
       const randomHeadingFont = allFonts[Math.floor(Math.random() * allFonts.length)].value
       const randomTextFont = allFonts[Math.floor(Math.random() * allFonts.length)].value
       const randomColor = colorOptions[Math.floor(Math.random() * colorOptions.length)].name
-      const randomSpacing = spacingOptions[Math.floor(Math.random() * spacingOptions.length)]
       const randomRadius = radiusOptions[Math.floor(Math.random() * radiusOptions.length)]
 
       // Update settings for animation effect
@@ -297,7 +293,6 @@ export function DynamicIslandMenu({ onThemeChange }: DynamicIslandMenuProps) {
         headingFont: randomHeadingFont,
         textFont: randomTextFont,
         color: randomColor,
-        spacing: randomSpacing,
         radius: randomRadius,
         // Keep the current theme
         theme: settings.theme,
@@ -382,7 +377,7 @@ export function DynamicIslandMenu({ onThemeChange }: DynamicIslandMenuProps) {
       </motion.div>
 
       {/* Menu Items */}
-      {["font", "color", "spacing", "radius", "ai"].map((item, index) => (
+      {["font", "color", "radius", "ai"].map((item, index) => (
         <motion.div key={item} custom={index} variants={itemVariants} initial="hidden" animate="visible">
           <Button
             variant="ghost"
@@ -399,8 +394,6 @@ export function DynamicIslandMenu({ onThemeChange }: DynamicIslandMenuProps) {
 
   const getOptionsForMenu = (menu: string) => {
     switch (menu) {
-      case "spacing":
-        return spacingOptions
       case "radius":
         return radiusOptions
       default:
@@ -521,9 +514,10 @@ export function DynamicIslandMenu({ onThemeChange }: DynamicIslandMenuProps) {
           <Textarea
             value={aiPrompt}
             onChange={(e) => setAiPrompt(e.target.value)}
-            placeholder="Describe your theme..."
+            placeholder="Describe your theme, coming soon..."
             className="w-full bg-transparent border border-white/20 rounded-md text-white text-sm resize-none focus:border-white/40 focus:ring-0 placeholder:text-white/40 mb-2"
             style={{ maxHeight: "80px" }}
+            disabled={true}
           />
 
           <div className="flex justify-between items-center">
@@ -540,8 +534,8 @@ export function DynamicIslandMenu({ onThemeChange }: DynamicIslandMenuProps) {
             <Button
               variant="outline"
               size="sm"
-              className="rounded-md text-sm text-white hover:text-white hover:bg-white/10 border-white/20 hover:border-white/40"
-              onClick={handleGenerateTheme}
+              className="rounded-md text-sm text-white/50 border-white/20 cursor-not-allowed"
+              disabled={true}
             >
               <Wand2 className="h-3.5 w-3.5 mr-1.5" />
               Generate

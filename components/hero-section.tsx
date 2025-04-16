@@ -21,7 +21,6 @@ const themeVariants = {
     headingFont: SYSTEM_HEADING_FONT,
     textFont: SYSTEM_TEXT_FONT,
     color: "blue-600",
-    spacing: "Default",
     radius: "Default",
     theme: "dark" as const,
   },
@@ -29,7 +28,6 @@ const themeVariants = {
     headingFont: "var(--font-press-start-2p), 'Press Start 2P', 'VT323', monospace",
     textFont: "var(--font-silkscreen), 'Silkscreen', 'VT323', sans-serif",
     color: "green-600",
-    spacing: "Default",
     radius: "None",
     theme: "dark" as const,
   },
@@ -37,7 +35,6 @@ const themeVariants = {
     headingFont: "var(--font-bruno-ace), 'Bruno Ace', sans-serif",
     textFont: "var(--font-bruno-ace), 'Bruno Ace', sans-serif", // Changed from Audiowide to Bruno Ace
     color: "red-600",
-    spacing: "Compact",
     radius: "Small",
     theme: "dark" as const,
   },
@@ -55,22 +52,21 @@ export function HeroSection() {
     headingFont: SYSTEM_HEADING_FONT,
     textFont: SYSTEM_TEXT_FONT,
     color: "blue-600",
-    spacing: "Default",
     radius: "Default",
     theme: "dark",
   })
 
   // Apply initial spacing class and theme on mount
   useEffect(() => {
-    const spacingClass = themeSettings.spacing.toLowerCase()
-    document.documentElement.classList.add(`spacing-${spacingClass}`)
+    // Always use default spacing
+    document.documentElement.classList.add("spacing-default")
 
     // Apply initial font settings
     document.documentElement.style.setProperty("--heading-font-family", themeSettings.headingFont)
     document.documentElement.style.setProperty("--text-font-family", themeSettings.textFont)
 
     return () => {
-      document.documentElement.classList.remove(`spacing-${spacingClass}`)
+      document.documentElement.classList.remove("spacing-default")
     }
   }, [])
 
@@ -196,10 +192,9 @@ export function HeroSection() {
       })
     })
 
-    // Apply spacing changes
-    const spacingClass = newSettings.spacing.toLowerCase()
+    // Always use default spacing
     document.documentElement.classList.remove("spacing-compact", "spacing-default", "spacing-comfortable")
-    document.documentElement.classList.add(`spacing-${spacingClass}`)
+    document.documentElement.classList.add("spacing-default")
 
     // Apply radius changes
     const radiusValues: Record<string, string> = {
@@ -415,7 +410,7 @@ export function HeroSection() {
   }
 
   return (
-    <div className={`relative overflow-hidden bg-background ${heroVariant === 3 ? "tron-grid-bg" : ""}`}>
+    <div className={`relative overflow-hidden bg-background min-h-screen ${heroVariant === 3 ? "tron-grid-bg" : ""}`}>
       {/* Loading overlay */}
       <AnimatePresence>
         {isLoading && targetVariant && (
@@ -433,9 +428,7 @@ export function HeroSection() {
 
       {/* Gradient background - positioned absolutely to cover the bottom half */}
       <div
-        className={`absolute bottom-0 left-0 right-0 h-[800px] pointer-events-none ${
-          heroVariant === 2 ? "minecraft-night-sky" : ""
-        }`}
+        className={`absolute inset-0 pointer-events-none ${heroVariant === 2 ? "minecraft-night-sky" : ""}`}
         style={{
           background:
             heroVariant !== 2 && heroVariant !== 3
