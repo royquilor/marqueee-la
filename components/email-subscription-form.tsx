@@ -75,6 +75,7 @@ export function EmailSubscriptionForm({ className }: EmailSubscriptionFormProps)
   const [hasError, setHasError] = useState(false)
   const [errorMessage, setErrorMessage] = useState("")
   const [isSubmitted, setIsSubmitted] = useState(false)
+  const [successMessage, setSuccessMessage] = useState("Thanks for subscribing!")
   const inputRef = useRef<HTMLInputElement>(null)
   const formRef = useRef<HTMLFormElement>(null)
 
@@ -133,6 +134,7 @@ export function EmailSubscriptionForm({ className }: EmailSubscriptionFormProps)
 
       if (result.success) {
         setIsSubmitted(true)
+        setSuccessMessage(result.message)
         setEmail("") // Clear the input
       } else {
         setHasError(true)
@@ -247,9 +249,7 @@ export function EmailSubscriptionForm({ className }: EmailSubscriptionFormProps)
           transition={{ duration: 0.3 }}
           key={isSubmitted ? "success" : "default"}
         >
-          {isSubmitted
-            ? "Thanks. Full subscription functionality is coming soon!"
-            : "Join our newsletter to get the latest updates and features."}
+          {isSubmitted ? successMessage : "Join our newsletter to get the latest updates and features."}
         </motion.p>
       </form>
     </div>

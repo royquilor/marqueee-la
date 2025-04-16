@@ -1,6 +1,8 @@
 "use server"
 
 import { z } from "zod"
+import { headers } from "next/headers"
+import { addSubscription, getSubscriptionByEmail, type SubscriptionData } from "@/lib/supabase"
 
 // List of common disposable email domains
 const disposableEmailDomains = [
@@ -70,7 +72,7 @@ const subscribeSchema = z.object({
   email: z.string().email("Please enter a valid email address"),
   formLoadTime: z.number().min(0),
   mouseMovements: z.number().min(0),
-  honeypot: z.string().max(0, "Bot detected"), // Should be empty
+  honeypot: z.string().max(0, "Bot detected"),
 })
 
 export type SubscribeFormData = z.infer<typeof subscribeSchema>
@@ -82,7 +84,6 @@ export type SubscribeResult = {
 
 /**
  * Validates an email domain using basic checks
- * This is a fallback since DNS MX record checks don't work in all environments
  * @param email Email address to validate
  * @returns Boolean indicating if the domain appears valid
  */
@@ -203,7 +204,7 @@ function updateRateLimitCounters(ip: string, email: string): void {
 
 /**
  * Server action to handle newsletter subscription
- * Implements multiple anti-spam techniques
+ * Implements multiple anti-spam techniques and stores valid submissions in Supabase
  */
 export async function subscribeToNewsletter(formData: SubscribeFormData): Promise<SubscribeResult> {
   try {
@@ -211,9 +212,14 @@ export async function subscribeToNewsletter(formData: SubscribeFormData): Promis
     const validatedData = subscribeSchema.parse(formData)
     const { email, formLoadTime, mouseMovements, honeypot } = validatedData
 
-    // Get IP address (in production, you'd get this from request headers)
-    // For demo purposes, we'll use a placeholder
-    const ip = "127.0.0.1" // In production: req.headers['x-forwarded-for'] || req.connection.remoteAddress
+    // Get request headers
+    const headersList = headers()
+    const userAgent = headersList.get("user-agent") || ""
+    const referer = headersList.get("referer") || ""
+
+    // Get IP address (in production, this would be from X-Forwarded-For)
+    // For local development, we'll use a placeholder
+    const ip = headersList.get("x-forwarded-for")?.split(",")[0] || "127.0.0.1"
 
     // 2. Check honeypot field (already validated by zod schema)
 
@@ -257,11 +263,38 @@ export async function subscribeToNewsletter(formData: SubscribeFormData): Promis
       }
     }
 
+    // 8. Check if email already exists in database
+    const existingSubscription = await getSubscriptionByEmail(email)
+    if (existingSubscription) {
+      return {
+        success: true,
+        message: "You're already subscribed! Thank you for your interest.",
+      }
+    }
+
+    // 9. Save to Supabase
+    const subscriptionData: SubscriptionData = {
+      email,
+      ip_address: ip,
+      user_agent: userAgent,
+      referrer: referer,
+      mouse_movements: mouseMovements,
+      form_load_time: formLoadTime,
+      submission_time: submissionTime,
+      status: "active",
+    }
+
+    const saved = await addSubscription(subscriptionData)
+
+    if (!saved) {
+      return {
+        success: false,
+        message: "There was an error saving your subscription. Please try again.",
+      }
+    }
+
     // Update rate limit counters
     updateRateLimitCounters(ip, email)
-
-    // In a real implementation, you would save to database
-    console.log("Valid subscription:", email)
 
     // Return success
     return {
