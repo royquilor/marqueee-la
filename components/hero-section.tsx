@@ -24,11 +24,11 @@ const themeVariants = {
     theme: "dark" as const,
   },
   variant2: {
-    headingFont: "var(--font-instrument-serif), " + SYSTEM_HEADING_FONT,
-    textFont: SYSTEM_TEXT_FONT,
-    color: "purple-600",
-    spacing: "Comfortable",
-    radius: "Large",
+    headingFont: "var(--font-press-start-2p), 'Press Start 2P', 'VT323', monospace",
+    textFont: "var(--font-silkscreen), 'Silkscreen', 'VT323', sans-serif",
+    color: "green-600",
+    spacing: "Default",
+    radius: "None",
     theme: "dark" as const,
   },
   variant3: {
@@ -243,25 +243,36 @@ export function HeroSection() {
             animate="center"
             exit="exit"
             transition={{
-              x: { type: "spring", stiffness: 100, damping: 25 }, // Reduced stiffness, increased damping
-              opacity: { duration: 0.5 }, // Increased duration for opacity
+              x: { type: "spring", stiffness: 100, damping: 25 },
+              opacity: { duration: 0.5 },
             }}
           >
-            <div className="py-20 text-center lg:py-40 w-full">
-              <motion.h1
-                className="text-4xl font-medium tracking-tighter text-foreground sm:text-5xl md:text-6xl w-full m-0 p-0 mb-8"
-                initial={{ opacity: 0, y: 10 }} // Reduced y distance
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.3, duration: 0.7 }} // Slower animation
-              >
-                Try different designs fast
-              </motion.h1>
+            <div className="py-20 text-center lg:py-40 w-full minecraft-theme">
+              {/* Star Wars style 3D perspective container */}
+              <div className="star-wars-container mx-auto max-w-3xl perspective-500 overflow-hidden">
+                <motion.h1
+                  className="text-4xl font-medium tracking-tighter text-foreground sm:text-5xl md:text-6xl w-full m-0 p-0 mb-8 minecraft-heading minecraft-pixelated minecraft-text-yellow star-wars-text"
+                  initial={{ opacity: 0, rotateX: 25, y: "50%" }}
+                  animate={{
+                    opacity: 1,
+                    rotateX: 25,
+                    y: "0%",
+                    transition: {
+                      opacity: { duration: 1 },
+                      y: { duration: 2, ease: "easeOut" },
+                    },
+                  }}
+                >
+                  Try different designs fast
+                </motion.h1>
+              </div>
               <motion.div
-                initial={{ opacity: 0, y: 10 }} // Reduced y distance
+                initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.5, duration: 0.7 }} // Slower animation
+                transition={{ delay: 0.5, duration: 0.7 }}
+                className="inline-block mx-auto"
               >
-                <EmailSubscriptionForm />
+                <EmailSubscriptionForm className="minecraft-form" theme="minecraft" />
               </motion.div>
             </div>
           </motion.div>

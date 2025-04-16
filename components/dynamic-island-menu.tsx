@@ -48,6 +48,8 @@ const fontCategories = [
     name: "Retro",
     fonts: [
       { name: "Courier New", value: "Courier New, Courier, monospace" },
+      { name: "Press Start 2P", value: "var(--font-press-start-2p), 'Press Start 2P', monospace" },
+      { name: "Silkscreen", value: "var(--font-silkscreen), 'Silkscreen', sans-serif" },
       { name: "Utara", value: "Utara, sans-serif" },
       { name: "Beast", value: "Beast, sans-serif" },
       { name: "FT88", value: "FT88, monospace" },

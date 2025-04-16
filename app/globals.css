@@ -14,6 +14,9 @@
       -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
     --mono-font-family: var(--font-jetbrains-mono, "JetBrains Mono"), ui-monospace, SFMono-Regular, Menlo, Monaco,
       Consolas, "Liberation Mono", "Courier New", monospace;
+    /* Update the minecraft font variables */
+    --minecraft-heading-font: var(--font-press-start-2p, "Minecraft"), "Press Start 2P", "VT323", monospace;
+    --minecraft-text-font: var(--font-silkscreen, "Minecraft"), "Silkscreen", "VT323", sans-serif;
 
     /* Default color values */
     --primary-hue: 215;
@@ -82,6 +85,17 @@
     --sidebar-border: 240 3.7% 25%; /* Updated: increased lightness for better visibility */
     --sidebar-ring: 240 4.9% 83.9%;
   }
+}
+
+/* Update the Minecraft theme to use the new font variables */
+.minecraft-theme {
+  --primary-hue: 100;
+  --primary-saturation: 50%;
+  --primary: var(--primary-hue) var(--primary-saturation) 40%;
+  --primary-foreground: 0 0% 100%;
+
+  /* Override border radius for blocky appearance */
+  --radius: 0;
 }
 
 @layer base {
@@ -347,4 +361,166 @@
   .animate-marquee {
     animation-name: marquee;
   }
+}
+
+@font-face {
+  font-family: "Minecraft";
+  src: url("/fonts/minecraft.woff2") format("woff2");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Update the @import for Google Fonts to include Press Start 2P */
+@import url("https://fonts.googleapis.com/css2?family=VT323&family=Press+Start+2P&display=swap");
+
+/* Fallback for Minecraft font */
+@import url("https://fonts.googleapis.com/css2?family=VT323&display=swap");
+
+/* Minecraft Theme CSS */
+/* Add this at the end of the globals.css file */
+
+/* Pixelated rendering for the Minecraft aesthetic */
+.minecraft-pixelated {
+  image-rendering: pixelated;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: crisp-edges;
+  font-smooth: never;
+  -webkit-font-smoothing: none;
+}
+
+/* Minecraft dirt texture background */
+.minecraft-dirt-bg {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' fill='%23593d29'/%3E%3Crect width='8' height='8' fill='%236b4c35'/%3E%3Crect x='8' y='8' width='8' height='8' fill='%236b4c35'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+}
+
+/* Minecraft stone texture background */
+.minecraft-stone-bg {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' fill='%23686868'/%3E%3Crect width='4' height='4' x='4' y='4' fill='%23888888'/%3E%3Crect width='4' height='4' x='12' y='12' fill='%23888888'/%3E%3Crect width='2' height='2' x='2' y='10' fill='%23787878'/%3E%3Crect width='2' height='2' x='10' y='2' fill='%23787878'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+}
+
+/* Update the Minecraft heading style to use the new font variable */
+.minecraft-heading {
+  font-family: var(--minecraft-heading-font);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  text-shadow: 2px 2px #000000;
+  line-height: 1.2;
+}
+
+/* Add a new class for Minecraft text */
+.minecraft-text {
+  font-family: var(--minecraft-text-font);
+  letter-spacing: 0.5px;
+}
+
+/* Update the Minecraft button styles to use the heading font */
+.minecraft-button {
+  position: relative;
+  display: inline-block;
+  padding: 6px 12px;
+  background-color: #8b8b8b;
+  border: 2px solid #373737;
+  border-bottom-width: 4px;
+  color: white;
+  font-family: var(--minecraft-heading-font);
+  text-shadow: 2px 2px #373737;
+  text-align: center;
+  text-transform: uppercase;
+  image-rendering: pixelated;
+  transition: none;
+}
+
+.minecraft-button:hover {
+  background-color: #9b9b9b;
+}
+
+.minecraft-button:active {
+  border-bottom-width: 2px;
+  transform: translateY(2px);
+}
+
+.minecraft-button.green {
+  background-color: #54a93f;
+  border-color: #3f7f2f;
+}
+
+.minecraft-button.green:hover {
+  background-color: #64c94f;
+}
+
+.minecraft-button.yellow {
+  background-color: #d9a334;
+  border-color: #a67d26;
+}
+
+.minecraft-button.yellow:hover {
+  background-color: #f9c354;
+}
+
+/* Minecraft panel with border */
+.minecraft-panel {
+  background-color: rgba(0, 0, 0, 0.8);
+  border: 2px solid #555555;
+  padding: 8px;
+}
+
+/* Minecraft text colors */
+.minecraft-text-yellow {
+  color: #ffdd00;
+}
+
+.minecraft-text-green {
+  color: #54a93f;
+}
+
+/* Minecraft gradient background (like the bottom of the carousel) */
+.minecraft-gradient-bg {
+  background: linear-gradient(to top, #d9a334 0%, rgba(0, 0, 0, 0) 100%);
+}
+
+/* Minecraft input field */
+.minecraft-input {
+  background-color: #1d1d1d;
+  border: 2px solid #555555;
+  color: white;
+  padding: 8px 12px;
+}
+
+.minecraft-input:focus {
+  border-color: #54a93f;
+  outline: none;
+}
+
+/* Star Wars style 3D perspective */
+.perspective-500 {
+  perspective: 500px;
+}
+
+.star-wars-container {
+  position: relative;
+  height: 200px;
+  overflow: hidden;
+}
+
+.star-wars-text {
+  position: relative;
+  transform-origin: 50% 100%;
+  transform: rotateX(25deg);
+  text-align: center;
+}
+
+@keyframes star-wars-scroll {
+  0% {
+    transform: translateY(100%) rotateX(25deg);
+  }
+  100% {
+    transform: translateY(-50%) rotateX(25deg);
+  }
+}
+
+.star-wars-scroll {
+  animation: star-wars-scroll 20s linear infinite;
 }

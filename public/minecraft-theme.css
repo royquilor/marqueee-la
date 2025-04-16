@@ -1,0 +1,109 @@
+/* Minecraft Theme CSS */
+
+/* Pixelated rendering for the Minecraft aesthetic */
+.minecraft-pixelated {
+  image-rendering: pixelated;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: crisp-edges;
+  font-smooth: never;
+  -webkit-font-smoothing: none;
+}
+
+/* Minecraft dirt texture background */
+.minecraft-dirt-bg {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' fill='%23593d29'/%3E%3Crect width='8' height='8' fill='%236b4c35'/%3E%3Crect x='8' y='8' width='8' height='8' fill='%236b4c35'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+}
+
+/* Minecraft stone texture background */
+.minecraft-stone-bg {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' fill='%23686868'/%3E%3Crect width='4' height='4' x='4' y='4' fill='%23888888'/%3E%3Crect width='4' height='4' x='12' y='12' fill='%23888888'/%3E%3Crect width='2' height='2' x='2' y='10' fill='%23787878'/%3E%3Crect width='2' height='2' x='10' y='2' fill='%23787878'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+}
+
+/* Minecraft button styles */
+.minecraft-button {
+  position: relative;
+  display: inline-block;
+  padding: 6px 12px;
+  background-color: #8b8b8b;
+  border: 2px solid #373737;
+  border-bottom-width: 4px;
+  color: white;
+  font-family: var(--minecraft-font);
+  text-shadow: 2px 2px #373737;
+  text-align: center;
+  text-transform: uppercase;
+  image-rendering: pixelated;
+  transition: none;
+}
+
+.minecraft-button:hover {
+  background-color: #9b9b9b;
+}
+
+.minecraft-button:active {
+  border-bottom-width: 2px;
+  transform: translateY(2px);
+}
+
+.minecraft-button.green {
+  background-color: #54a93f;
+  border-color: #3f7f2f;
+}
+
+.minecraft-button.green:hover {
+  background-color: #64c94f;
+}
+
+.minecraft-button.yellow {
+  background-color: #d9a334;
+  border-color: #a67d26;
+}
+
+.minecraft-button.yellow:hover {
+  background-color: #f9c354;
+}
+
+/* Minecraft panel with border */
+.minecraft-panel {
+  background-color: rgba(0, 0, 0, 0.8);
+  border: 2px solid #555555;
+  padding: 8px;
+}
+
+/* Minecraft text colors */
+.minecraft-text-yellow {
+  color: #ffdd00;
+}
+
+.minecraft-text-green {
+  color: #54a93f;
+}
+
+/* Minecraft heading style */
+.minecraft-heading {
+  font-family: var(--minecraft-font);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  text-shadow: 2px 2px #000000;
+  line-height: 1.2;
+}
+
+/* Minecraft gradient background (like the bottom of the carousel) */
+.minecraft-gradient-bg {
+  background: linear-gradient(to top, #d9a334 0%, rgba(0, 0, 0, 0) 100%);
+}
+
+/* Minecraft input field */
+.minecraft-input {
+  background-color: #1d1d1d;
+  border: 2px solid #555555;
+  color: white;
+  padding: 8px 12px;
+}
+
+.minecraft-input:focus {
+  border-color: #54a93f;
+  outline: none;
+}

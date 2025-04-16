@@ -25,6 +25,7 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table"
+import { MinecraftCompletedIcon, MinecraftInProgressIcon, MinecraftTodoIcon } from "@/components/icons/minecraft"
 
 // Task type definition
 type Task = {
@@ -193,9 +194,10 @@ const tasks: Task[] = [
 
 interface TaskListProps {
   className?: string
+  heroVariant?: 1 | 2 | 3
 }
 
-export function TaskList({ className }: TaskListProps) {
+export function TaskList({ className, heroVariant = 1 }: TaskListProps) {
   const [sorting, setSorting] = React.useState<SortingState>([])
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([])
   const [rowSelection, setRowSelection] = React.useState({})
@@ -231,6 +233,24 @@ export function TaskList({ className }: TaskListProps) {
       header: "Status",
       cell: ({ row }) => {
         const status = row.getValue("status") as string
+
+        // Use Minecraft icons when heroVariant is 2
+        if (heroVariant === 2) {
+          return (
+            <div className="flex items-center gap-2">
+              {status === "completed" ? (
+                <MinecraftCompletedIcon className="h-4 w-4 text-green-500" />
+              ) : status === "in-progress" ? (
+                <MinecraftInProgressIcon className="h-4 w-4 text-orange-500" />
+              ) : (
+                <MinecraftTodoIcon className="h-4 w-4" />
+              )}
+              <span className="capitalize text-xs">{status.replace("-", " ")}</span>
+            </div>
+          )
+        }
+
+        // Default icons
         return (
           <div className="flex items-center gap-2">
             {status === "completed" ? (
@@ -333,14 +353,32 @@ export function TaskList({ className }: TaskListProps) {
           <h2 className="text-lg font-semibold">Tasks</h2>
         </div>
         <div className="flex items-center gap-1.5">
-          <Button variant="ghost" size="sm" className="h-7 gap-1 text-xs">
-            <ListFilter className="h-3 w-3" />
-            <span>Filter</span>
-          </Button>
-          <Button size="sm" className="h-7 gap-1 text-xs">
-            <Plus className="h-3 w-3" />
-            <span>Add Task</span>
-          </Button>
+          {heroVariant === 2 ? (
+            <button className="minecraft-button minecraft-pixelated h-7 text-xs px-3 pt-0.5 pb-1.5 mr-2">
+              <span className="flex items-center justify-center gap-1">
+                <ListFilter className="h-3 w-3 flex-shrink-0" />
+                <span className="inline-flex items-center">FILTER</span>
+              </span>
+            </button>
+          ) : (
+            <Button variant="ghost" size="sm" className="h-7 gap-1 text-xs flex items-center pt-0.5 pb-1">
+              <ListFilter className="h-3 w-3 flex-shrink-0" />
+              <span className="inline-flex items-center">Filter</span>
+            </Button>
+          )}
+          {heroVariant === 2 ? (
+            <button className="minecraft-button green minecraft-pixelated h-7 text-xs px-3 pt-0.5 pb-1.5">
+              <span className="flex items-center justify-center gap-1">
+                <Plus className="h-3 w-3 flex-shrink-0" />
+                <span className="inline-flex items-center">ADD TASK</span>
+              </span>
+            </button>
+          ) : (
+            <Button size="sm" className="h-7 gap-1 text-xs flex items-center pt-0.5 pb-1">
+              <Plus className="h-3 w-3 flex-shrink-0" />
+              <span className="inline-flex items-center">Add Task</span>
+            </Button>
+          )}
         </div>
       </div>
 

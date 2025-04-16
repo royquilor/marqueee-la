@@ -15,13 +15,22 @@ import {
 import { SidebarTrigger } from "@/components/ui/sidebar"
 import { ThemeToggle } from "./theme-toggle"
 import { getProfessionalPortraitAvatar } from "@/utils/avatar"
+import { MinecraftSearchIcon, MinecraftBellIcon } from "@/components/icons/minecraft"
 
-export function DashboardHeader() {
+interface DashboardHeaderProps {
+  heroVariant?: 1 | 2 | 3
+}
+
+export function DashboardHeader({ heroVariant = 1 }: DashboardHeaderProps) {
+  // Determine which icons to use based on heroVariant
+  const SearchIconComponent = heroVariant === 2 ? MinecraftSearchIcon : Search
+  const BellIconComponent = heroVariant === 2 ? MinecraftBellIcon : Bell
+
   return (
     <header className="sticky top-0 z-10 flex h-12 items-center gap-3 bg-background px-3">
       <SidebarTrigger className="md:hidden" />
       <div className="relative flex-1">
-        <Search className="absolute left-2 top-1.5 h-4 w-4 text-muted-foreground" />
+        <SearchIconComponent className="absolute left-2 top-1.5 h-4 w-4 text-muted-foreground" />
         <Input
           type="search"
           placeholder="Search tasks..."
@@ -29,11 +38,11 @@ export function DashboardHeader() {
         />
       </div>
       <div className="flex items-center gap-2">
-        <ThemeToggle />
+        <ThemeToggle heroVariant={heroVariant} />
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="ghost" size="icon" className="relative h-7 w-7">
-              <Bell className="h-4 w-4" />
+              <BellIconComponent className="h-4 w-4" />
               <span className="absolute right-1 top-1 flex h-1.5 w-1.5 rounded-full bg-primary"></span>
               <span className="sr-only">Notifications</span>
             </Button>

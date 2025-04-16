@@ -21,6 +21,13 @@ import { Button } from "@/components/ui/button"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { getProfessionalPortraitAvatar } from "@/utils/avatar"
+import {
+  MinecraftCircleIcon,
+  MinecraftTasksIcon,
+  MinecraftProjectsIcon,
+  MinecraftTeamIcon,
+  MinecraftAnalyticsIcon,
+} from "@/components/icons/minecraft"
 
 interface DashboardSidebarProps {
   selectedView: "tasks" | "projects" | "team" | "analytics"
@@ -28,10 +35,11 @@ interface DashboardSidebarProps {
   isActive: boolean
   onActivate: (e?: React.MouseEvent) => void
   onDeactivate: () => void
+  heroVariant?: 1 | 2 | 3
 }
 
 export const DashboardSidebar = forwardRef<HTMLDivElement, DashboardSidebarProps>(
-  ({ selectedView, setSelectedView, isActive, onActivate, onDeactivate }, ref) => {
+  ({ selectedView, setSelectedView, isActive, onActivate, onDeactivate, heroVariant = 1 }, ref) => {
     const [variant, setVariant] = useState<1 | 2 | 3>(1)
     const innerRef = useRef<HTMLDivElement>(null)
 
@@ -54,6 +62,13 @@ export const DashboardSidebar = forwardRef<HTMLDivElement, DashboardSidebarProps
       return () => window.removeEventListener("keydown", handleKeyDown)
     }, [isActive])
 
+    // Determine which icons to use based on heroVariant
+    const CircleIconComponent = heroVariant === 2 ? MinecraftCircleIcon : Circle
+    const TasksIconComponent = heroVariant === 2 ? MinecraftTasksIcon : CheckSquare
+    const ProjectsIconComponent = heroVariant === 2 ? MinecraftProjectsIcon : Layout
+    const TeamIconComponent = heroVariant === 2 ? MinecraftTeamIcon : Users
+    const AnalyticsIconComponent = heroVariant === 2 ? MinecraftAnalyticsIcon : BarChart3
+
     // Render different variants based on the current variant state
     const renderVariant = () => {
       // Base sidebar class that includes the inner ring when active but no border
@@ -65,7 +80,7 @@ export const DashboardSidebar = forwardRef<HTMLDivElement, DashboardSidebarProps
             <Sidebar variant="floating" collapsible="icon" className={sidebarClass}>
               <SidebarHeader className="flex items-start p-2 px-4">
                 <div className="flex items-center gap-2">
-                  <Circle className="h-4 w-4 text-primary" />
+                  <CircleIconComponent className="h-4 w-4 text-primary" />
                   <span className="text-sm font-semibold">Marqueee</span>
                 </div>
               </SidebarHeader>
@@ -78,7 +93,7 @@ export const DashboardSidebar = forwardRef<HTMLDivElement, DashboardSidebarProps
                       tooltip="Tasks"
                       className="text-sm"
                     >
-                      <CheckSquare className="h-4 w-4" />
+                      <TasksIconComponent className="h-4 w-4" />
                       <span>Tasks</span>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
@@ -89,7 +104,7 @@ export const DashboardSidebar = forwardRef<HTMLDivElement, DashboardSidebarProps
                       tooltip="Projects"
                       className="text-sm"
                     >
-                      <Layout className="h-4 w-4" />
+                      <ProjectsIconComponent className="h-4 w-4" />
                       <span>Projects</span>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
@@ -100,7 +115,7 @@ export const DashboardSidebar = forwardRef<HTMLDivElement, DashboardSidebarProps
                       tooltip="Team"
                       className="text-sm"
                     >
-                      <Users className="h-4 w-4" />
+                      <TeamIconComponent className="h-4 w-4" />
                       <span>Team</span>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
@@ -111,7 +126,7 @@ export const DashboardSidebar = forwardRef<HTMLDivElement, DashboardSidebarProps
                       tooltip="Analytics"
                       className="text-sm"
                     >
-                      <BarChart3 className="h-4 w-4" />
+                      <AnalyticsIconComponent className="h-4 w-4" />
                       <span>Analytics</span>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
@@ -136,7 +151,7 @@ export const DashboardSidebar = forwardRef<HTMLDivElement, DashboardSidebarProps
             <Sidebar variant="floating" collapsible="icon" className={sidebarClass}>
               <SidebarHeader className="flex flex-col gap-2 p-2">
                 <div className="flex items-center gap-2 px-2">
-                  <Circle className="h-4 w-4 text-primary" />
+                  <CircleIconComponent className="h-4 w-4 text-primary" />
                   <span className="text-base font-semibold tracking-tight">Marqueee</span>
                 </div>
 
@@ -181,7 +196,7 @@ export const DashboardSidebar = forwardRef<HTMLDivElement, DashboardSidebarProps
                           tooltip="Tasks"
                           className="text-sm"
                         >
-                          <CheckSquare className="h-4 w-4" />
+                          <TasksIconComponent className="h-4 w-4" />
                           <span>Tasks</span>
                         </SidebarMenuButton>
                       </SidebarMenuItem>
@@ -192,7 +207,7 @@ export const DashboardSidebar = forwardRef<HTMLDivElement, DashboardSidebarProps
                           tooltip="Projects"
                           className="text-sm"
                         >
-                          <Layout className="h-4 w-4" />
+                          <ProjectsIconComponent className="h-4 w-4" />
                           <span>Projects</span>
                         </SidebarMenuButton>
                       </SidebarMenuItem>
@@ -212,7 +227,7 @@ export const DashboardSidebar = forwardRef<HTMLDivElement, DashboardSidebarProps
                           tooltip="Team"
                           className="text-sm"
                         >
-                          <Users className="h-4 w-4" />
+                          <TeamIconComponent className="h-4 w-4" />
                           <span>Team</span>
                         </SidebarMenuButton>
                       </SidebarMenuItem>
@@ -223,7 +238,7 @@ export const DashboardSidebar = forwardRef<HTMLDivElement, DashboardSidebarProps
                           tooltip="Analytics"
                           className="text-sm"
                         >
-                          <BarChart3 className="h-4 w-4" />
+                          <AnalyticsIconComponent className="h-4 w-4" />
                           <span>Analytics</span>
                         </SidebarMenuButton>
                       </SidebarMenuItem>
@@ -251,7 +266,7 @@ export const DashboardSidebar = forwardRef<HTMLDivElement, DashboardSidebarProps
             <Sidebar variant="floating" collapsible="icon" className={sidebarClass}>
               <SidebarHeader className="flex items-center justify-between p-2 px-4">
                 <div className="flex items-center gap-2">
-                  <Circle className="h-4 w-4 text-primary" />
+                  <CircleIconComponent className="h-4 w-4 text-primary" />
                   <span className="text-base font-semibold tracking-tight">Marqueee</span>
                 </div>
 
@@ -288,7 +303,7 @@ export const DashboardSidebar = forwardRef<HTMLDivElement, DashboardSidebarProps
                       tooltip="Tasks"
                       className="text-sm"
                     >
-                      <CheckSquare className="h-4 w-4" />
+                      <TasksIconComponent className="h-4 w-4" />
                       <span>Tasks</span>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
@@ -299,7 +314,7 @@ export const DashboardSidebar = forwardRef<HTMLDivElement, DashboardSidebarProps
                       tooltip="Projects"
                       className="text-sm"
                     >
-                      <Layout className="h-4 w-4" />
+                      <ProjectsIconComponent className="h-4 w-4" />
                       <span>Projects</span>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
@@ -310,7 +325,7 @@ export const DashboardSidebar = forwardRef<HTMLDivElement, DashboardSidebarProps
                       tooltip="Team"
                       className="text-sm"
                     >
-                      <Users className="h-4 w-4" />
+                      <TeamIconComponent className="h-4 w-4" />
                       <span>Team</span>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
@@ -321,7 +336,7 @@ export const DashboardSidebar = forwardRef<HTMLDivElement, DashboardSidebarProps
                       tooltip="Analytics"
                       className="text-sm"
                     >
-                      <BarChart3 className="h-4 w-4" />
+                      <AnalyticsIconComponent className="h-4 w-4" />
                       <span>Analytics</span>
                     </SidebarMenuButton>
                   </SidebarMenuItem>

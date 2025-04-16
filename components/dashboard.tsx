@@ -58,7 +58,7 @@ export default function Dashboard({ heroVariant = 1 }: DashboardProps) {
             {selectedView === "tasks" && (
               <div className="flex h-full flex-col">
                 <ProjectOverview />
-                <TaskList className="flex-1" />
+                <TaskList className="flex-1" heroVariant={heroVariant} />
               </div>
             )}
             {selectedView === "projects" && (
@@ -105,7 +105,7 @@ export default function Dashboard({ heroVariant = 1 }: DashboardProps) {
                     <div className="text-2xl font-bold">5</div>
                   </div>
                 </div>
-                <TaskList className="flex-1" />
+                <TaskList className="flex-1" heroVariant={heroVariant} />
               </div>
             )}
             {selectedView !== "tasks" && (
@@ -125,7 +125,7 @@ export default function Dashboard({ heroVariant = 1 }: DashboardProps) {
             {selectedView === "tasks" && (
               <div className="flex h-full flex-col">
                 {/* Project overview is hidden for variant 3 */}
-                <TaskList className="flex-1" />
+                <TaskList className="flex-1" heroVariant={heroVariant} />
               </div>
             )}
             {selectedView !== "tasks" && (
@@ -157,9 +157,10 @@ export default function Dashboard({ heroVariant = 1 }: DashboardProps) {
           }}
           ref={sidebarRef}
           onDeactivate={handleDeactivateAll}
+          heroVariant={heroVariant}
         />
         <div className="flex flex-1 flex-col overflow-hidden border-l border-border dark:border-border/90">
-          <DashboardHeader />
+          <DashboardHeader heroVariant={heroVariant} />
           <main className="flex-1 overflow-auto p-0">{renderDashboardContent()}</main>
         </div>
       </div>

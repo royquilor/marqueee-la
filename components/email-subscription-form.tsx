@@ -1,7 +1,7 @@
 "use client"
 
 import type React from "react"
-import { useState, useRef, useEffect } from "react"
+import { useState, useRef, useEffect, createContext, useContext } from "react"
 import { Input } from "@/components/ui/input"
 import { Check, Loader2 } from "lucide-react"
 import { cn } from "@/utils/utils"
@@ -13,10 +13,65 @@ interface EmailSubscriptionFormProps {
   className?: string
 }
 
+// Create a FormContext to pass the theme
+const FormContext = createContext<{ theme?: string } | null>(null)
+
 // Form submit button with loading state
 function SubscribeButton({ isSubmitted }: { isSubmitted: boolean }) {
   const { pending } = useFormStatus()
+  const formContext = useContext(FormContext)
+  const isMinecraft = formContext?.theme === "minecraft"
 
+  if (isMinecraft) {
+    return (
+      <motion.button
+        type="submit"
+        className={cn(
+          "minecraft-button green minecraft-pixelated",
+          isSubmitted ? "w-12 p-0 flex items-center justify-center" : "px-6",
+        )}
+        disabled={pending || isSubmitted}
+        style={{
+          opacity: isSubmitted ? 1 : undefined,
+          minWidth: isSubmitted ? "48px" : "120px",
+          fontFamily: "var(--minecraft-heading-font)", // Ensure the button uses the heading font
+        }}
+        animate={{
+          width: isSubmitted ? "48px" : "auto",
+        }}
+        transition={{
+          type: "spring",
+          stiffness: 300,
+          damping: 20,
+          duration: 0.3,
+        }}
+      >
+        {pending ? (
+          <>
+            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+            <span>WAIT...</span>
+          </>
+        ) : isSubmitted ? (
+          <motion.div
+            initial={{ scale: 0 }}
+            animate={{ scale: 1 }}
+            transition={{
+              type: "spring",
+              stiffness: 400,
+              damping: 10,
+              delay: 0.1,
+            }}
+          >
+            <Check className="h-5 w-5" />
+          </motion.div>
+        ) : (
+          "SUBSCRIBE"
+        )}
+      </motion.button>
+    )
+  }
+
+  // Original button code remains here
   return (
     <motion.button
       type="submit"
@@ -70,7 +125,7 @@ function SubscribeButton({ isSubmitted }: { isSubmitted: boolean }) {
   )
 }
 
-export function EmailSubscriptionForm({ className }: EmailSubscriptionFormProps) {
+export function EmailSubscriptionForm({ className, theme }: EmailSubscriptionFormProps & { theme?: string }) {
   const [email, setEmail] = useState("")
   const [hasError, setHasError] = useState(false)
   const [errorMessage, setErrorMessage] = useState("")
@@ -165,93 +220,96 @@ export function EmailSubscriptionForm({ className }: EmailSubscriptionFormProps)
   }
 
   return (
-    <div className={`mx-auto mt-8 max-w-md px-4 ${className || ""}`}>
-      <form ref={formRef} onSubmit={handleSubmit} className="flex flex-col items-center">
-        {/* Honeypot field - hidden from users but bots will fill it */}
-        <input
-          ref={honeyPotRef}
-          type="text"
-          name="website"
-          tabIndex={-1}
-          aria-hidden="true"
-          autoComplete="off"
-          style={{
-            position: "absolute",
-            width: "1px",
-            height: "1px",
-            padding: 0,
-            margin: "-1px",
-            overflow: "hidden",
-            clip: "rect(0, 0, 0, 0)",
-            whiteSpace: "nowrap",
-            borderWidth: 0,
-          }}
-        />
+    <FormContext.Provider value={{ theme }}>
+      <div className={`mx-auto mt-8 max-w-md px-4 ${className || ""}`}>
+        <form ref={formRef} onSubmit={handleSubmit} className="flex flex-col items-center">
+          {/* Honeypot field - hidden from users but bots will fill it */}
+          <input
+            ref={honeyPotRef}
+            type="text"
+            name="website"
+            tabIndex={-1}
+            aria-hidden="true"
+            autoComplete="off"
+            style={{
+              position: "absolute",
+              width: "1px",
+              height: "1px",
+              padding: 0,
+              margin: "-1px",
+              overflow: "hidden",
+              clip: "rect(0, 0, 0, 0)",
+              whiteSpace: "nowrap",
+              borderWidth: 0,
+            }}
+          />
 
-        {/* Hidden fields for anti-spam measures */}
-        <input type="hidden" name="formLoadTime" value={formLoadTime} />
-        <input type="hidden" name="mouseMovements" value={mouseMovements} />
-
-        <motion.div
-          className="flex gap-2 w-full"
-          layout
-          transition={{
-            layout: { type: "spring", stiffness: 300, damping: 25 },
-          }}
-        >
-          <AnimatePresence mode="popLayout">
-            {!isSubmitted && (
-              <motion.div
-                className="relative flex-1"
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: -20 }}
-                transition={{ duration: 0.3 }}
-                key="email-input"
-              >
-                <Input
-                  ref={inputRef}
-                  type="email"
-                  placeholder="Enter your email"
-                  className={cn(
-                    "h-12 bg-background/50 backdrop-blur-sm border-border/50 focus-visible:ring-primary",
-                    hasError && "border-red-500 focus-visible:ring-red-500 ring-2 ring-red-500",
-                  )}
-                  value={email}
-                  onChange={handleEmailChange}
-                  aria-invalid={hasError}
-                  aria-describedby={hasError ? "email-error" : undefined}
-                  disabled={isSubmitted}
-                />
-                {hasError && errorMessage && (
-                  <div id="email-error" className="text-red-500 text-xs mt-1">
-                    {errorMessage}
-                  </div>
-                )}
-              </motion.div>
-            )}
-          </AnimatePresence>
+          {/* Hidden fields for anti-spam measures */}
+          <input type="hidden" name="formLoadTime" value={formLoadTime} />
+          <input type="hidden" name="mouseMovements" value={mouseMovements} />
 
           <motion.div
+            className="flex gap-2 w-full"
             layout
-            className={cn("flex justify-center", isSubmitted ? "mx-auto" : "")}
             transition={{
               layout: { type: "spring", stiffness: 300, damping: 25 },
             }}
           >
-            <SubscribeButton isSubmitted={isSubmitted} />
-          </motion.div>
-        </motion.div>
+            <AnimatePresence mode="popLayout">
+              {!isSubmitted && (
+                <motion.div
+                  className="relative flex-1"
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -20 }}
+                  transition={{ duration: 0.3 }}
+                  key="email-input"
+                >
+                  <Input
+                    ref={inputRef}
+                    type="email"
+                    placeholder="Enter your email"
+                    className={cn(
+                      "h-12 bg-background/50 backdrop-blur-sm border-border/50 focus-visible:ring-primary",
+                      hasError && "border-red-500 focus-visible:ring-red-500 ring-2 ring-red-500",
+                      theme === "minecraft" && "minecraft-input minecraft-pixelated",
+                    )}
+                    value={email}
+                    onChange={handleEmailChange}
+                    aria-invalid={hasError}
+                    aria-describedby={hasError ? "email-error" : undefined}
+                    disabled={isSubmitted}
+                  />
+                  {hasError && errorMessage && (
+                    <div id="email-error" className="text-red-500 text-xs mt-1">
+                      {errorMessage}
+                    </div>
+                  )}
+                </motion.div>
+              )}
+            </AnimatePresence>
 
-        <motion.p
-          className="text-sm text-muted-foreground mt-2 text-center"
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.3 }}
-          key={isSubmitted ? "success" : "default"}
-        >
-          {isSubmitted ? successMessage : "Join our newsletter to get the latest updates and features."}
-        </motion.p>
-      </form>
-    </div>
+            <motion.div
+              layout
+              className={cn("flex justify-center", isSubmitted ? "mx-auto" : "")}
+              transition={{
+                layout: { type: "spring", stiffness: 300, damping: 25 },
+              }}
+            >
+              <SubscribeButton isSubmitted={isSubmitted} />
+            </motion.div>
+          </motion.div>
+
+          <motion.p
+            className="text-sm text-muted-foreground mt-2 text-center"
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.3 }}
+            key={isSubmitted ? "success" : "default"}
+          >
+            {isSubmitted ? successMessage : "Join our newsletter to get the latest updates and features."}
+          </motion.p>
+        </form>
+      </div>
+    </FormContext.Provider>
   )
 }
