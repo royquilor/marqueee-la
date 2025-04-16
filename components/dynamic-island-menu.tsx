@@ -89,6 +89,7 @@ const MARQUEEE_LETTERS = ["M", "A", "R", "Q", "U", "E", "E", "E"]
 
 interface DynamicIslandMenuProps {
   onThemeChange: (ThemeSettings) => void
+  heroVariant?: 1 | 2 | 3
 }
 
 export interface ThemeSettings {
@@ -99,7 +100,7 @@ export interface ThemeSettings {
   theme: "light" | "dark" | "system"
 }
 
-export function DynamicIslandMenu({ onThemeChange }: DynamicIslandMenuProps) {
+export function DynamicIslandMenu({ onThemeChange, heroVariant = 1 }: DynamicIslandMenuProps) {
   const { theme, setTheme } = useTheme()
   const [activeMenu, setActiveMenu] = useState<string | null>(null)
   const [fontTab, setFontTab] = useState<"heading" | "text">("heading")
@@ -693,8 +694,19 @@ export function DynamicIslandMenu({ onThemeChange }: DynamicIslandMenuProps) {
     )
   }
 
-  // Get the current primary color value for the glow
+  // Get the current primary color value for the glow based on the hero variant
   const getPrimaryColorValue = () => {
+    // For Minecraft theme (variant 2)
+    if (heroVariant === 2) {
+      return "#54a93f" // Minecraft green
+    }
+
+    // For Tron theme (variant 3)
+    if (heroVariant === 3) {
+      return "#ff3232" // Tron red
+    }
+
+    // For default theme (variant 1) or fallback
     const colorOption = colorOptions.find((option) => option.name === settings.color)
     return colorOption ? colorOption.color : "#2563eb" // Default to blue if not found
   }

@@ -274,7 +274,7 @@ export function HeroSection() {
                 />
               </h1>
               <p className="animate-fade-in-delay-1 mx-auto mt-4 max-w-2xl text-xl text-balance text-muted-foreground px-4">
-                Try different design themes fast. Built on Shadcn ui. Hit the right arrow key, or press CMD + R.
+                Try different design themes fast. Built on Shadcn/UI. Hit the right arrow key, or press CMD + R.
               </p>
               <div className="animate-fade-in-delay-2">
                 <EmailSubscriptionForm />
@@ -331,7 +331,7 @@ export function HeroSection() {
           {/* Red glow background */}
           <div className="absolute inset-0 tron-red-glow-bg pointer-events-none"></div>
 
-          <div className="py-10 w-full flex flex-col items-start text-left relative z-10">
+          <div className="py-20 text-center lg:py-40 w-full flex flex-col items-center text-center relative z-10">
             <motion.h1
               className="text-4xl font-bold tracking-wider sm:text-5xl md:text-6xl max-w-3xl tron-text-outline"
               initial={{ opacity: 0, x: -20 }}
@@ -342,7 +342,7 @@ export function HeroSection() {
                 textTransform: "none",
               }}
             >
-              No Going Back
+              Try different designs fast
             </motion.h1>
 
             <motion.p
@@ -352,7 +352,7 @@ export function HeroSection() {
               transition={{ delay: 0.5, duration: 0.7 }}
               style={{ fontFamily: "var(--tron-heading-font)" }}
             >
-              Enter the grid. Experience the future of design with our AI-powered interface.
+              Try different design themes fast. Built on Shadcn/UI. Hit the right arrow key, or press CMD + R.
             </motion.p>
 
             <motion.div
@@ -431,7 +431,7 @@ export function HeroSection() {
       </div>
 
       {/* Dynamic Island Menu */}
-      <DynamicIslandMenu onThemeChange={handleThemeSettings} />
+      <DynamicIslandMenu onThemeChange={handleThemeSettings} heroVariant={heroVariant} />
     </div>
   )
 }
