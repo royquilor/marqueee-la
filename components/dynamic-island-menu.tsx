@@ -17,6 +17,7 @@ const fontCategories = [
   {
     name: "Clean",
     fonts: [
+      { name: "Arial", value: "Arial, Helvetica, sans-serif" },
       {
         name: "System UI",
         value: "system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif",
@@ -28,6 +29,7 @@ const fontCategories = [
   {
     name: "Elegant",
     fonts: [
+      { name: "Georgia", value: "Georgia, serif" },
       { name: "System Serif", value: "Georgia, Cambria, 'Times New Roman', Times, serif" },
       { name: "Instrument Serif", value: "var(--font-instrument-serif), Georgia, serif" },
       { name: "Monument Grotesk", value: "var(--font-monument-grotesk), system-ui, sans-serif" },
@@ -36,6 +38,7 @@ const fontCategories = [
   {
     name: "Fun",
     fonts: [
+      { name: "Verdana", value: "Verdana, Geneva, sans-serif" },
       { name: "DT Getai", value: "DT Getai, sans-serif" },
       { name: "Havana", value: "Havana, sans-serif" },
       { name: "Open Runde", value: "Open Runde, sans-serif" },
@@ -44,6 +47,7 @@ const fontCategories = [
   {
     name: "Retro",
     fonts: [
+      { name: "Courier New", value: "Courier New, Courier, monospace" },
       { name: "Utara", value: "Utara, sans-serif" },
       { name: "Beast", value: "Beast, sans-serif" },
       { name: "FT88", value: "FT88, monospace" },
@@ -52,6 +56,7 @@ const fontCategories = [
   {
     name: "Experimental",
     fonts: [
+      { name: "Lucida Console", value: "Lucida Console, Monaco, monospace" },
       { name: "Alpha Lyrae", value: "Alpha Lyrae, sans-serif" },
       { name: "Barlow Fold", value: "Barlow Fold, sans-serif" },
       { name: "Ark ES", value: "Ark ES, sans-serif" },
